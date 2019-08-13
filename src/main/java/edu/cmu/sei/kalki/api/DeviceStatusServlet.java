@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.api;
 
+import edu.cmu.sei.kalki.rulebooks.AlertConditionTester;
 import edu.cmu.sei.ttg.kalki.models.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONException;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class DeviceStatusServlet extends HttpServlet {
@@ -35,6 +37,8 @@ public class DeviceStatusServlet extends HttpServlet {
         }
 
         System.out.println(status.toString());
+        status.insert();
+        AlertConditionTester.testDeviceStatus(status);
 
         response.setStatus(HttpStatus.OK_200);
     }
@@ -77,5 +81,9 @@ public class DeviceStatusServlet extends HttpServlet {
             attributes.put(key,value);
         }
         return attributes;
+    }
+
+    private void testStatus(int deviceId){
+
     }
 }

@@ -1,6 +1,7 @@
 package Rulebooks;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.ttg.kalki.models.AlertCondition;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Alert;
@@ -9,7 +10,7 @@ import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 
 import java.util.HashMap;
-
+import java.util.List;
 /**
  * @author camazzotta
  * @version 1.0
@@ -26,8 +27,8 @@ public abstract class RulebookRule {
 	@Given("status")
 	protected DeviceStatus status;
 
-	@Given("last-result")
-	protected HashMap<String, String> lastResult;
+	@Given("alert-conditions")
+	protected List<AlertCondition> alertConditions;
 
 	@Result
 	protected HashMap<String, String> result;
