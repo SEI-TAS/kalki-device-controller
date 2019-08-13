@@ -1,7 +1,7 @@
-package Rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.unts;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
 public class Temperature extends RulebookRule {

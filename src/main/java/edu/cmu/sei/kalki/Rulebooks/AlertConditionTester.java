@@ -6,6 +6,7 @@ import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 // Rulebook imports, for later reference
 import com.deliveredtechnologies.rulebook.FactMap;
@@ -14,11 +15,15 @@ import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
 import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
 public class AlertConditionTester {
+    private static Logger logger = Logger.getLogger("device-controller");
+
     public static void testDeviceStatus(DeviceStatus status){
         Device device = Postgres.findDevice(status.getDeviceId());
         List<AlertCondition> alertConditionList = Postgres.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
         RuleBookRunner ruleBookRunner = prepareRulebook(device.getType());
+
+        logger.info("[AlertConditionTester] Running rulebook for DeviceStatus: "+status.getId());
         ruleBookRunner.run(factMap);
     }
 
@@ -47,7 +52,7 @@ public class AlertConditionTester {
                 ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.phle");
                 break;
             default:
-                System.out.println("System not configured to test statuses for DeviceType: " + deviceType.getName());
+                logger.severe("System not configured to test statuses for DeviceType: " + deviceType.getName());
         }
 
         return ruleBookRunner;

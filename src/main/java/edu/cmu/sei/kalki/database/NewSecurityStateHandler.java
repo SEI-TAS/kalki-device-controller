@@ -11,8 +11,11 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class NewSecurityStateHandler implements InsertHandler {
+    private Logger logger = Logger.getLogger("device-controller");
+
 //    private final String apiUrl = "http://10.27.153.2:9090/iot-interface-api/send-command"; //production url
     private final String apiUrl = "http://10.27.151.103:9090/iot-interface-api/send-command"; //test url
 
@@ -42,6 +45,9 @@ public class NewSecurityStateHandler implements InsertHandler {
             out.write(json.toString());
             out.close();
             httpCon.getInputStream();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            logger.severe("[NewSecurityStateHandler] Error sending device and commands to IoT Interface API: "+dev.toString());
+            logger.severe(e.getMessage());
+        }
     }
 }

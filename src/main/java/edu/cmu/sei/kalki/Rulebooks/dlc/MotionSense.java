@@ -1,11 +1,11 @@
-package Rulebooks.dlc;
+package edu.cmu.sei.kalki.rulebooks.dlc;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 import java.util.Map;
 

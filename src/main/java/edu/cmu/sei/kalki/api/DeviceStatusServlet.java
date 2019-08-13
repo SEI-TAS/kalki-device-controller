@@ -17,12 +17,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class DeviceStatusServlet extends HttpServlet {
+    private static Logger logger = Logger.getLogger("device-controller");
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        System.out.println("Request received at /api/new-status/");
+        logger.info("[DeviceStatusServlet] Request received at /iot-interface-api/new-status/");
 
         // read body of request
         JSONObject requestBody = parseRequestBody(request, response);
@@ -36,10 +38,10 @@ public class DeviceStatusServlet extends HttpServlet {
             throw new ServletException("Error parsing device JSON: " + e.getMessage());
         }
 
-        System.out.println(status.toString());
         status.insert();
-        AlertConditionTester.testDeviceStatus(status);
+        logger.info("[DeviceStatusServlet] DeviceStatus inserted:"+status.toString());
 
+        AlertConditionTester.testDeviceStatus(status);
         response.setStatus(HttpStatus.OK_200);
     }
 
@@ -83,7 +85,4 @@ public class DeviceStatusServlet extends HttpServlet {
         return attributes;
     }
 
-    private void testStatus(int deviceId){
-
-    }
 }

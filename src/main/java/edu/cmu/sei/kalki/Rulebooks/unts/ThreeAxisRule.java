@@ -1,6 +1,6 @@
-package Rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.unts;
 
-import Rulebooks.RulebookRule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 import com.deliveredtechnologies.rulebook.annotation.*;
 
 @Rule()

@@ -8,8 +8,11 @@ import org.json.JSONObject;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class DeviceHandler implements InsertHandler {
+    private Logger logger = Logger.getLogger("device-controller");
+
     //    private String apiUrl = "http://10.27.153.2:9090/iot-interface-api"; //production url
     private String apiUrl = "http://10.27.151.103:9090/iot-interface-api"; //test url
 
@@ -34,6 +37,9 @@ public class DeviceHandler implements InsertHandler {
             out.write(json.toString());
             out.close();
             httpCon.getInputStream();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            logger.severe("[DeviceHandler] Error sending device to IoT Interface API: "+dev.toString());
+            logger.severe(e.getMessage());
+        }
     }
 }

@@ -1,4 +1,4 @@
-package Rulebooks;
+package edu.cmu.sei.kalki.rulebooks;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.AlertCondition;
@@ -11,6 +11,7 @@ import com.deliveredtechnologies.rulebook.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Logger;
 /**
  * @author camazzotta
  * @version 1.0
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @Rule()
 public abstract class RulebookRule {
-
+	protected Logger logger = Logger.getLogger("device-controller");
 	protected String alertName;
 
 	@Given("device")
@@ -42,6 +43,7 @@ public abstract class RulebookRule {
 
 	@Then
 	public void then(){
+		logger.info("[RulebookRule] Alert triggered: "+alertName+" for status: "+status.getId());
 		Alert alert = new Alert(alertName, status.getId(), 1);
 		alert.insert();
 	}

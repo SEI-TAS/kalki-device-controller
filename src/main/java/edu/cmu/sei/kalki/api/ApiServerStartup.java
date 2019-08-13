@@ -2,11 +2,13 @@ package edu.cmu.sei.kalki.api;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import java.util.logging.Logger;
 
 public class ApiServerStartup {
+    private static Logger logger = Logger.getLogger("device-controller");
+
     private static final String API_URL = "/device-controller-api";
     private static final int SERVER_PORT = 9090;
-
     /**
      * Starts a Jetty server, with handler for notifications
      */
@@ -17,10 +19,10 @@ public class ApiServerStartup {
             handler.addServlet(DeviceStatusServlet.class, "/new-status");
             httpServer.start();
 
-            System.out.println("URI: "+httpServer.getURI().toString());
+            logger.info("[ApiServerStartup] Server started at URI: "+httpServer.getURI().toString());
         } catch (Exception e) {
-            System.out.println("Error starting IoT Interface API Server");
-            e.printStackTrace();
+            logger.severe("[ApiServerStartup] Error starting IoT Interface API Server:");
+            logger.severe(e.getMessage());
         }
     }
 }

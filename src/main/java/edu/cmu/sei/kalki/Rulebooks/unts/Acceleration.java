@@ -1,4 +1,4 @@
-package Rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.unts;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
 
