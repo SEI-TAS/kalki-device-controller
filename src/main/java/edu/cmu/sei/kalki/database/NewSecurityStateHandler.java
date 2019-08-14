@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 public class NewSecurityStateHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
 
-//    private final String apiUrl = "http://10.27.153.2:9090/iot-interface-api/send-command"; //production url
-    private final String apiUrl = "http://10.27.151.103:9090/iot-interface-api/send-command"; //test url
+    private String apiUrl = "http://10.27.153.2:5050/iot-interface-api"; //production url
+//    private final String apiUrl = "http://10.27.151.103:9090/iot-interface-api/send-command"; //test url
 
     public NewSecurityStateHandler() { }
 
