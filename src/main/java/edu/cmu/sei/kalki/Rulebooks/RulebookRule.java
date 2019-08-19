@@ -1,10 +1,7 @@
 package edu.cmu.sei.kalki.rulebooks;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.AlertCondition;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Alert;
+import edu.cmu.sei.ttg.kalki.models.*;
 
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
@@ -20,7 +17,7 @@ import java.util.logging.Logger;
 @Rule()
 public abstract class RulebookRule {
 	protected Logger logger = Logger.getLogger("device-controller");
-	protected String alertName;
+	protected AlertCondition alertCondition;
 
 	@Given("device")
 	protected Device device;
@@ -43,8 +40,9 @@ public abstract class RulebookRule {
 
 	@Then
 	public void then(){
-		logger.info("[RulebookRule] Alert triggered: "+alertName+" for status: "+status.getId());
-		Alert alert = new Alert(alertName, status.getId(), 1);
+		logger.info("[RulebookRule] Alert triggered: "+alertCondition.getAlertTypeName()+" for status: "+status.getId());
+		AlertTypeLookup atl = Postgres.findAlertTypeLookup(alertCondition.getAlertTypeLookupId());
+		Alert alert = new Alert(alertCondition.getAlertTypeName(), status.getId(), atl.getAlertTypeId());
 		alert.insert();
 	}
 
@@ -53,7 +51,12 @@ public abstract class RulebookRule {
 		return conditionIsTrue();
 	}
 
-	protected void setAlertName(String name){
-		alertName = name;
+	protected void setAlertCondition(String name){
+		for(AlertCondition c: alertConditions){
+			if(c.getAlertTypeName().equals(name)){
+				alertCondition = c;
+				break;
+			}
+		}
 	}
 }//end GenericRule

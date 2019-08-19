@@ -16,18 +16,25 @@ public class LastChange extends RulebookRule {
     public LastChange(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("wemo-last-change");
+        int minutes = Integer.valueOf(alertCondition.getVariables().get("lastchange"));
         List<DeviceStatus> statuses = device.lastNSamples(2);
 
         if (statuses.size() > 1) {
-            // convert timestamp escape format to long
-            long ts1 = Timestamp.valueOf(statuses.get(0).getAttributes().get("lastchange")).getTime();
-            long ts2 = Timestamp.valueOf(statuses.get(1).getAttributes().get("lastchange")).getTime();
+            boolean oneIsOn = Boolean.parseBoolean(statuses.get(0).getAttributes().get("isOn"));
+            boolean twoIsOn = Boolean.parseBoolean(statuses.get(1).getAttributes().get("isOn"));
 
-            // if lastchange > 10 minutes
-            if(Math.abs(ts1 - ts2) /60000 > 10){
-                setAlertName("wemo-last-change");
-                return true;
+            if(oneIsOn && twoIsOn) {
+                // convert timestamp escape format to long
+                long ts1 = Timestamp.valueOf(statuses.get(0).getAttributes().get("lastchange")).getTime();
+                long ts2 = Timestamp.valueOf(statuses.get(1).getAttributes().get("lastchange")).getTime();
+
+                if(Math.abs(ts1 - ts2) /60000 > minutes){
+                    return true;
+                }
             }
+
+
         }
         return false;
     }

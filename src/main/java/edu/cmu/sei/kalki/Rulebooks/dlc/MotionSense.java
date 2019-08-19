@@ -15,18 +15,19 @@ public class MotionSense extends RulebookRule {
     public MotionSense(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("dlc-motion-sense");
+
         boolean conditionIsTrue = false; // condition: motion_sense == true && PHLE.isOn == false
 
         boolean motionDetected = Boolean.parseBoolean(status.getAttributes().get("motion_detected"));
-
-        if(motionDetected){
+        boolean motionCondition = Boolean.parseBoolean(alertCondition.getVariables().get("motion_detected"));
+        if(motionDetected == motionCondition){
             for(Map.Entry<Device, DeviceStatus> entry: device.statusesOfSameGroup().entrySet()){
                 Device d = entry.getKey();
                 DeviceStatus s = entry.getValue();
                 boolean isOn = Boolean.parseBoolean(s.getAttributes().get("isOn"));
-
-                if(!isOn){ // a light is off
-                    setAlertName("dlc-motion-sense");
+                boolean isOnCondition = Boolean.parseBoolean(s.getAttributes().get("isOn"));
+                if(isOn == isOnCondition){ // a light is off
                     conditionIsTrue = true;
                 }
             }

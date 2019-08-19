@@ -13,11 +13,14 @@ public class TimeOn extends RulebookRule {
     public TimeOn(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("wemo-time-on");
+
+        int onTimeThreshold = Integer.valueOf(alertCondition.getVariables().get("today_on_time"));
+
         // today_on_time is in seconds
         int onTime = Integer.valueOf(status.getAttributes().get("today_on_time"));
 
-        if (onTime > 32400){
-            setAlertName("wemo-time-on");
+        if (onTime > onTimeThreshold){
             return true;
         }
 

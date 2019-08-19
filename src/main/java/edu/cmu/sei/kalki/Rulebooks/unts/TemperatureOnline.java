@@ -20,7 +20,7 @@ public class TemperatureOnline extends RulebookRule {
 
     public boolean conditionIsTrue(){
 
-        setAlertName("unts-temperature-online");
+        setAlertCondition("unts-temperature-online");
         return false;
     }
 

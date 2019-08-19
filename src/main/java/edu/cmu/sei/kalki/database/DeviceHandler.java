@@ -22,6 +22,7 @@ public class DeviceHandler implements InsertHandler {
 
     @Override
     public void handleNewInsertion(int newDeviceId) {
+        logger.info("[DeviceHandler] ");
         Device device = Postgres.findDevice(newDeviceId);
         sendToIotInterface(device);
     }

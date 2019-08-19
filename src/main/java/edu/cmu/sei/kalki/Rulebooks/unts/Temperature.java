@@ -5,8 +5,6 @@ import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
 public class Temperature extends RulebookRule {
-    private final double tempLowerBound = 20.0;
-    private final double tempUpperBound = 23.0;
 
     public Temperature(){ }
 
@@ -31,10 +29,11 @@ public class Temperature extends RulebookRule {
      * @return
      */
     public boolean conditionIsTrue(){
+        setAlertCondition("unts-temperature");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
-
+        double tempLowerBound = Double.valueOf(alertCondition.getVariables().get("temp_input_lower"));
+        double tempUpperBound = Double.valueOf(alertCondition.getVariables().get("temp_input_upper"));
         if (temp < tempLowerBound || temp > tempUpperBound){
-            setAlertName("unts-temperature");
             return true;
         }
         return false;

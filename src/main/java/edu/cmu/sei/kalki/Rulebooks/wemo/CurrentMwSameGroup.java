@@ -16,11 +16,11 @@ public class CurrentMwSameGroup extends RulebookRule {
     public CurrentMwSameGroup(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("wemo-current-mw-same-group");
         double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
         double groupAverage = groupAverage();
 
         if(currentmw > (groupAverage + 20)){
-            setAlertName("wemo-current-mw-same-group");
             return true;
         }
         return false;

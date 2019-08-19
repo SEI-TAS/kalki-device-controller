@@ -10,15 +10,14 @@ import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 @Rule()
 public class TodayKwh extends RulebookRule {
 
-    private final double kwhUpperBound = 0.220;
-
     public TodayKwh(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("wemo-today-kwh");
+        double todayKwHThreshold = Double.valueOf(alertCondition.getVariables().get("today_kwh"));
         double todayKwH = Double.valueOf(status.getAttributes().get("today_kwh"));
 
-        if (todayKwH > kwhUpperBound ){
-            setAlertName("wemo-today-kwh");
+        if (todayKwH > todayKwHThreshold){
             return true;
         }
 

@@ -11,12 +11,11 @@ import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 @Rule()
 public class OddOneOut extends RulebookRule {
 
-    public OddOneOut(){
-
-    }
+    public OddOneOut(){ }
 
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = true;
+        setAlertCondition("phle-odd-one-out");
 
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
@@ -33,7 +32,6 @@ public class OddOneOut extends RulebookRule {
             }
         }
 
-        setAlertName("phle-odd-one-out");
         return conditionIsTrue;
     }
 }

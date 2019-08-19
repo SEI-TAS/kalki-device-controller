@@ -20,7 +20,7 @@ public class MagnetometerOnline extends RulebookRule {
 
     public boolean conditionIsTrue(){
 
-        setAlertName("unts-magnetometer-online");
+        setAlertCondition("unts-magnetometer-online");
         return false;
     }
 

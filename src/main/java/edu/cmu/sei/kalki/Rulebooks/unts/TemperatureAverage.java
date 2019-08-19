@@ -15,12 +15,14 @@ public class TemperatureAverage extends RulebookRule {
     public TemperatureAverage(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("unts-temperature-avg");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
-        List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(device.getId(), 50);
+        int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
+
+        List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(device.getId(), numStatuses);
         double avg = calculateAverage(lastNStatuses);
 
         if(temp > (avg + 2) || temp < (avg - 2)){
-            setAlertName("unts-temperature-avg");
             return true;
         }
         return false;

@@ -10,22 +10,17 @@ import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 @Rule()
 public class TimeOff extends RulebookRule {
 
-    public TimeOff(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public TimeOff(){ }
 
     public boolean conditionIsTrue(){
-        // this status is OFF
-        if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
+        setAlertCondition("phle-time-off");
 
+        double lastOffCondition = Double.parseDouble(alertCondition.getVariables().get("time-last-change"));
+        double lastOff = Double.parseDouble(status.getAttributes().get("time-last-change"));
+        // this status is OFF && time last change > condition
+        if(!Boolean.parseBoolean(status.getAttributes().get("isOn")) && (lastOff > lastOffCondition)) {
+            return true;
         }
-            // query for last change of state
-        // if last change > X (120 for now) minutes
-        setAlertName("phle-time-off");
         return false;
     }
 

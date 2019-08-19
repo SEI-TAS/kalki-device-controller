@@ -7,13 +7,6 @@ import java.util.Map;
 
 @Rule()
 public class Acceleration extends ThreeAxisRule {
-	private final double accelXLowerBound = -0.01;
-	private final double accelXUpperBound = 0.01;
-	private final double accelYLowerBound = -0.0766;
-	private final double accelYUpperBound = -0.0376;
-	private final double accelZLowerBound = -1.126;
-	private final double accelZUpperBound = 1.000;
-	private final double accelModLimit = 1.12864;
 
 	public Acceleration(){ }
 
@@ -39,15 +32,20 @@ public class Acceleration extends ThreeAxisRule {
 	 */
 
 	public boolean conditionIsTrue(){
+		setAlertCondition("unts-acceleration");
+
 		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
 		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));
 		double accelZ = Double.valueOf(status.getAttributes().get("accelerometerZ"));
 
-		if (	alertingAxis(accelX, accelXLowerBound, accelXUpperBound) ||
-				alertingAxis(accelY, accelYLowerBound, accelYUpperBound) ||
-				alertingAxis(accelZ, accelZLowerBound, accelZUpperBound) ||
+		double accelXBound = Double.valueOf(alertCondition.getVariables().get("accelerometerX"));
+		double accelYBound = Double.valueOf(alertCondition.getVariables().get("accelerometerY"));
+		double accelZBound = Double.valueOf(alertCondition.getVariables().get("accelerometerZ"));
+		double accelModLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
+		if (	alertingAxis(accelX, (accelXBound*-1), accelXBound) ||
+				alertingAxis(accelY, (accelYBound*-1), accelYBound) ||
+				alertingAxis(accelZ, (accelZBound*-1), accelZBound) ||
 				alertingModulus(accelX, accelY, accelZ, accelModLimit)) {
-			setAlertName("unts-acceleration");
 			return true;
 		}
 
