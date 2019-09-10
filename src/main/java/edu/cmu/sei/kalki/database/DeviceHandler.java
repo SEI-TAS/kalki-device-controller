@@ -12,9 +12,10 @@ import java.util.logging.Logger;
 
 public class DeviceHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
+    private final int ATTEMPTS = 15;
 
-        private String apiUrl = "http://10.27.153.2:5050/iot-interface-api"; //production url
-//    private String apiUrl = "http://10.27.153.103:9090/iot-interface-api"; //test url
+//        private String apiUrl = "http://10.27.153.2:5050/iot-interface-api"; //production url
+    private String apiUrl = "http://0.0.0.0:5050/iot-interface-api"; //test url
 
     DeviceHandler(String endpoint) {
         apiUrl += endpoint;
@@ -28,19 +29,33 @@ public class DeviceHandler implements InsertHandler {
     }
 
     private void sendToIotInterface(Device dev) {
+        for(int i=0; i<ATTEMPTS; i++){
+            try {
+                URL url = new URL(apiUrl);
+                HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
+                httpCon.setDoOutput(true);
+                httpCon.setRequestMethod("POST");
+                OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
+                JSONObject json = new JSONObject(dev.toString());
+                out.write(json.toString());
+                out.close();
+                httpCon.getInputStream();
+                break;
+            } catch (Exception e) {
+                logger.severe("[DeviceHandler] Error sending device to IoT Interface API:"+dev.toString());
+                logger.severe(e.getMessage());
+                logger.severe("[DeviceHandler] Attempting to reconnect...");
+                sleep(1000);
+            }
+        }
+
+    }
+
+    private void sleep(int millis) {
         try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("POST");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-            JSONObject json = new JSONObject(dev.toString());
-            out.write(json.toString());
-            out.close();
-            httpCon.getInputStream();
+            Thread.sleep(millis);
         } catch (Exception e) {
-            logger.severe("[DeviceHandler] Error sending device to IoT Interface API: "+dev.toString());
-            logger.severe(e.getMessage());
+            logger.severe("[DeviceHandler] Error attempting to sleep: "+e.getMessage());
         }
     }
 }
