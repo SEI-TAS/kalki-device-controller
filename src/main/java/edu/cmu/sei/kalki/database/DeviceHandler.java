@@ -14,16 +14,14 @@ public class DeviceHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
     private final int ATTEMPTS = 15;
 
-//        private String apiUrl = "http://10.27.153.2:5050/iot-interface-api"; //production url
-    private String apiUrl = "http://0.0.0.0:5050/iot-interface-api"; //test url
+    private String apiUrl;
 
     DeviceHandler(String endpoint) {
-        apiUrl += endpoint;
+        apiUrl = endpoint;
     }
 
     @Override
     public void handleNewInsertion(int newDeviceId) {
-        logger.info("[DeviceHandler] ");
         Device device = Postgres.findDevice(newDeviceId);
         sendToIotInterface(device);
     }
@@ -31,7 +29,7 @@ public class DeviceHandler implements InsertHandler {
     private void sendToIotInterface(Device dev) {
         for(int i=0; i<ATTEMPTS; i++){
             try {
-                URL url = new URL(apiUrl);
+                URL url = new URL(this.apiUrl);
                 HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
                 httpCon.setDoOutput(true);
                 httpCon.setRequestMethod("POST");
@@ -42,7 +40,7 @@ public class DeviceHandler implements InsertHandler {
                 httpCon.getInputStream();
                 break;
             } catch (Exception e) {
-                logger.severe("[DeviceHandler] Error sending device to IoT Interface API:"+dev.toString());
+                logger.severe("[DeviceHandler] Error sending device to IoT Interface API "+apiUrl+": "+dev.toString());
                 logger.severe(e.getMessage());
                 logger.severe("[DeviceHandler] Attempting to reconnect...");
                 sleep(1000);
