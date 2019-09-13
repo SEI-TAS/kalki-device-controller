@@ -29,28 +29,11 @@ public class AlertConditionTester {
         List<AlertCondition> alertConditionList = Postgres.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
         RuleBookRunner ruleBookRunner = prepareRulebook(device.getType().getName());
-        setDeviceTypes();
 
         logger.info("[AlertConditionTester] Running rulebook for DeviceStatus: "+status.getId());
         ruleBookRunner.run(factMap);
     }
 
-    private static void setDeviceTypes() {
-        try{
-            Properties prop = new Properties();
-            String fileName = "device-type.config";
-            InputStream is = AlertConditionTester.class.getResourceAsStream("/device-type.config");
-            prop.load(is);
-
-            untsName = prop.getProperty("UNTS");
-            phleName = prop.getProperty("PHLE");
-            wemoName = prop.getProperty("WEMO");
-            dlinkName = prop.getProperty("DLC");
-        }
-        catch(IOException e){
-            logger.severe("Error reading device-types from config.");
-        }
-    }
 
     private static NameValueReferableMap prepareFactMap(Device device, DeviceStatus status, List<AlertCondition> alertConditionList) {
         NameValueReferableMap facts = new FactMap();
@@ -62,22 +45,9 @@ public class AlertConditionTester {
 
     private static RuleBookRunner prepareRulebook(String deviceType) {
         RuleBookRunner ruleBookRunner = null;
-
-        if (deviceType.equals(dlinkName)) {
-            logger.info("[AlertConditionTester] "+dlinkName+" rulebook selected");
-            ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.dlc");
-        } else if (deviceType.equals(untsName)) {
-            logger.info("[AlertConditionTester] "+untsName+" rulebook selected");
-            ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.unts");
-        } else if (deviceType.equals(wemoName)) {
-            logger.info("[AlertConditionTester] "+wemoName+" rulebook selected");
-            ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.wemo");
-        } else if (deviceType.equals(phleName)) {
-            logger.info("[AlertConditionTester] "+phleName+" rulebook selected");
-            ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.phle");
-        } else {
-            logger.severe("System not configured to test statuses for DeviceType: " + deviceType);
-        }
+        deviceType.replaceAll("\\s+","");
+        logger.info("[AlertConditionTester] "+deviceType+" rulebook selected");
+        ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks."+deviceType);
 
         return ruleBookRunner;
     }

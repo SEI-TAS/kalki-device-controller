@@ -1,9 +1,6 @@
-package edu.cmu.sei.kalki.rulebooks.wemo;
+package edu.cmu.sei.kalki.rulebooks.WeMoInsight;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -16,7 +13,7 @@ public class LastChange extends RulebookRule {
     public LastChange(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("wemo-last-change");
+        setAlertCondition("WeMoInsight-last-change");
         int minutes = Integer.valueOf(alertCondition.getVariables().get("lastchange"));
         List<DeviceStatus> statuses = device.lastNSamples(2);
 

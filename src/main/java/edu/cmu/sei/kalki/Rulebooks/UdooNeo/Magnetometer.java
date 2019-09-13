@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
 
@@ -37,7 +37,7 @@ public class Magnetometer extends ThreeAxisRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("unts-magnetometer");
+        setAlertCondition("UdooNeo-magnetometer");
 
         double magX = Double.valueOf(status.getAttributes().get("magnetometerX"));
         double magY = Double.valueOf(status.getAttributes().get("magnetometerY"));

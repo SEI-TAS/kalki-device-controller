@@ -20,7 +20,6 @@ public class DeviceController {
             apiUrl = args[0];
         } catch (ArrayIndexOutOfBoundsException e) { }
 
-        logger.info(apiUrl);
         DatabaseListener listener = new DatabaseListener();
         listener.start("http://"+apiUrl+"/iot-interface-api");
         logger.info("[DeviceController] Database listener started.");

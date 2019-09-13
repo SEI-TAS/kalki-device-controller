@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 
 import com.deliveredtechnologies.rulebook.annotation.*;
@@ -36,7 +36,7 @@ public class Gyro extends ThreeAxisRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("unts-gyro");
+        setAlertCondition("UdooNeo-gyro");
 
         double gyroX = Double.valueOf(status.getAttributes().get("gyroscopeX"));
         double gyroY = Double.valueOf(status.getAttributes().get("gyroscopeY"));

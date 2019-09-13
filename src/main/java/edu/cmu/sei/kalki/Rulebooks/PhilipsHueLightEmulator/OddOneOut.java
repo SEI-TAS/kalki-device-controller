@@ -1,10 +1,9 @@
-package edu.cmu.sei.kalki.rulebooks.phle;
+package edu.cmu.sei.kalki.rulebooks.PhilipsHueLightEmulator;
 
 import java.util.Map;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
+
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -15,7 +14,7 @@ public class OddOneOut extends RulebookRule {
 
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = true;
-        setAlertCondition("phle-odd-one-out");
+        setAlertCondition("PhilipsHueLightEmulator-odd-one-out");
 
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {

@@ -1,9 +1,7 @@
-package edu.cmu.sei.kalki.rulebooks.dlc;
+package edu.cmu.sei.kalki.rulebooks.DLinkCamera;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -15,7 +13,7 @@ public class MotionSense extends RulebookRule {
     public MotionSense(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("dlc-motion-sense");
+        setAlertCondition("DLinkCamera-motion-sense");
 
         boolean conditionIsTrue = false; // condition: motion_sense == true && PHLE.isOn == false
 

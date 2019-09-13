@@ -1,13 +1,10 @@
-package edu.cmu.sei.kalki.rulebooks.wemo;
+package edu.cmu.sei.kalki.rulebooks.WeMoInsight;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Rule()
@@ -16,7 +13,7 @@ public class CurrentMwSameGroup extends RulebookRule {
     public CurrentMwSameGroup(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("wemo-current-mw-same-group");
+        setAlertCondition("WeMoInsight-current-mw-same-group");
         double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
         double groupAverage = groupAverage();
 

@@ -1,8 +1,6 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
-
-import java.util.Map;
 
 
 @Rule()
@@ -32,7 +30,7 @@ public class Acceleration extends ThreeAxisRule {
 	 */
 
 	public boolean conditionIsTrue(){
-		setAlertCondition("unts-acceleration");
+		setAlertCondition("UdooNeo-acceleration");
 
 		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
 		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));

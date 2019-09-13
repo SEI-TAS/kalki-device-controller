@@ -1,9 +1,5 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -20,7 +16,7 @@ public class TemperatureOnline extends RulebookRule {
 
     public boolean conditionIsTrue(){
 
-        setAlertCondition("unts-temperature-online");
+        setAlertCondition("UdooNeo-temperature-online");
         return false;
     }
 

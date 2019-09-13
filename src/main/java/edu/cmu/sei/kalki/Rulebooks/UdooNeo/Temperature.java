@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
@@ -29,7 +29,7 @@ public class Temperature extends RulebookRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("unts-temperature");
+        setAlertCondition("UdooNeo-temperature");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         double tempLowerBound = Double.valueOf(alertCondition.getVariables().get("temp_input_lower"));
         double tempUpperBound = Double.valueOf(alertCondition.getVariables().get("temp_input_upper"));

@@ -1,9 +1,7 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -15,7 +13,7 @@ public class TemperatureAverage extends RulebookRule {
     public TemperatureAverage(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("unts-temperature-avg");
+        setAlertCondition("UdooNeo-temperature-avg");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
 

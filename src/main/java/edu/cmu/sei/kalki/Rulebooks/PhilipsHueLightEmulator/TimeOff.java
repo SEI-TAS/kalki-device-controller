@@ -1,9 +1,5 @@
-package edu.cmu.sei.kalki.rulebooks.phle;
+package edu.cmu.sei.kalki.rulebooks.PhilipsHueLightEmulator;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -13,7 +9,7 @@ public class TimeOff extends RulebookRule {
     public TimeOff(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("phle-time-off");
+        setAlertCondition("PhilipsHueLightEmulator-time-off");
 
         double lastOffCondition = Double.parseDouble(alertCondition.getVariables().get("time-last-change"));
         double lastOff = Double.parseDouble(status.getAttributes().get("time-last-change"));
