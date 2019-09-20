@@ -9,7 +9,7 @@ public class TimeOff extends RulebookRule {
     public TimeOff(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("PhilipsHueLightEmulator-time-off");
+        setAlertCondition("phle-time-off");
 
         double lastOffCondition = Double.parseDouble(alertCondition.getVariables().get("time-last-change"));
         double lastOff = Double.parseDouble(status.getAttributes().get("time-last-change"));

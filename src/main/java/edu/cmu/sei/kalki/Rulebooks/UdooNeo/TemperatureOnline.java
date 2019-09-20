@@ -6,17 +6,11 @@ import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 @Rule()
 public class TemperatureOnline extends RulebookRule {
 
-    public TemperatureOnline(){
-
-    }
-
-    public void finalize()
-            throws Throwable{
-    }
+    public TemperatureOnline(){ }
 
     public boolean conditionIsTrue(){
 
-        setAlertCondition("UdooNeo-temperature-online");
+        setAlertCondition("unts-temperature-online");
         return false;
     }
 

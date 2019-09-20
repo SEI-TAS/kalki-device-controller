@@ -13,7 +13,7 @@ public class TemperatureAverage extends RulebookRule {
     public TemperatureAverage(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("UdooNeo-temperature-avg");
+        setAlertCondition("unts-temperature-avg");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
 

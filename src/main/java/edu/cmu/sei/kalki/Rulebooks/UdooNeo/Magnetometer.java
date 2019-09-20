@@ -37,7 +37,7 @@ public class Magnetometer extends ThreeAxisRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("UdooNeo-magnetometer");
+        setAlertCondition("unts-magnetometer");
 
         double magX = Double.valueOf(status.getAttributes().get("magnetometerX"));
         double magY = Double.valueOf(status.getAttributes().get("magnetometerY"));

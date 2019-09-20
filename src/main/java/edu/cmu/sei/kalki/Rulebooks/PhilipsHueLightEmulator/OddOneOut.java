@@ -14,7 +14,7 @@ public class OddOneOut extends RulebookRule {
 
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = true;
-        setAlertCondition("PhilipsHueLightEmulator-odd-one-out");
+        setAlertCondition("phle-odd-one-out");
 
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {

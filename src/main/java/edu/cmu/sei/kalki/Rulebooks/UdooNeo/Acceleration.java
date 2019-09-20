@@ -30,7 +30,7 @@ public class Acceleration extends ThreeAxisRule {
 	 */
 
 	public boolean conditionIsTrue(){
-		setAlertCondition("UdooNeo-acceleration");
+		setAlertCondition("unts-acceleration");
 
 		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
 		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));
@@ -40,6 +40,8 @@ public class Acceleration extends ThreeAxisRule {
 		double accelYBound = Double.valueOf(alertCondition.getVariables().get("accelerometerY"));
 		double accelZBound = Double.valueOf(alertCondition.getVariables().get("accelerometerZ"));
 		double accelModLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
+		System.out.println("Actual: "+accelX+","+accelY+","+accelZ);
+		System.out.println("Bounds: "+accelXBound+","+accelYBound+","+accelYBound);
 		if (	alertingAxis(accelX, (accelXBound*-1), accelXBound) ||
 				alertingAxis(accelY, (accelYBound*-1), accelYBound) ||
 				alertingAxis(accelZ, (accelZBound*-1), accelZBound) ||

@@ -13,9 +13,14 @@ public class CurrentMwSameGroup extends RulebookRule {
     public CurrentMwSameGroup(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("WeMoInsight-current-mw-same-group");
+        setAlertCondition("wemo-current-mw-same-group");
         double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
-        double groupAverage = groupAverage();
+        double groupAverage = 0;
+        try {
+            groupAverage = groupAverage();
+        } catch (Exception e){
+            return false;
+        }
 
         if(currentmw > (groupAverage + 20)){
             return true;
@@ -23,7 +28,7 @@ public class CurrentMwSameGroup extends RulebookRule {
         return false;
     }
 
-    private double groupAverage() {
+    private double groupAverage() throws Exception {
         // get group statuses
         Map<Device, DeviceStatus> groupStatuses = device.statusesOfSameGroup();
         int numDevices = 0;
@@ -38,6 +43,9 @@ public class CurrentMwSameGroup extends RulebookRule {
                 numDevices++;
             }
         }
+
+        if (numDevices < 1)
+            throw new Exception("No devices of same type in the group.");
 
         double avg = sum/numDevices;
         return avg;

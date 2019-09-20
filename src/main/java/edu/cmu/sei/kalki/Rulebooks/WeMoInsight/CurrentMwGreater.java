@@ -14,13 +14,13 @@ public class CurrentMwGreater extends RulebookRule {
     public boolean conditionIsTrue(){
         double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
 
-        setAlertCondition("WeMoInsight-current-mw-greater-high");
+        setAlertCondition("wemo-current-mw-greater-high");
         double threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         if(currentmw > threshold) {
             return true;
         }
 
-        setAlertCondition("WeMoInsight-current-mw-greater-low");
+        setAlertCondition("wemo-current-mw-greater-low");
         threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         if(currentmw > threshold){
             return true;

@@ -5,11 +5,7 @@ import edu.cmu.sei.ttg.kalki.models.AlertCondition;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Logger;
 
 // Rulebook imports, for later reference
@@ -19,10 +15,6 @@ import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
 
 public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
-    private static String untsName;
-    private static String phleName;
-    private static String wemoName;
-    private static String dlinkName;
 
     public static void testDeviceStatus(DeviceStatus status){
         Device device = Postgres.findDevice(status.getDeviceId());
@@ -45,7 +37,7 @@ public class AlertConditionTester {
 
     private static RuleBookRunner prepareRulebook(String deviceType) {
         RuleBookRunner ruleBookRunner = null;
-        deviceType.replaceAll("\\s+","");
+        deviceType = deviceType.replaceAll("\\s","");
         logger.info("[AlertConditionTester] "+deviceType+" rulebook selected");
         ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks."+deviceType);
 

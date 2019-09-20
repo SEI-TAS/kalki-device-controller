@@ -29,7 +29,7 @@ public class Temperature extends RulebookRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("UdooNeo-temperature");
+        setAlertCondition("unts-temperature");
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         double tempLowerBound = Double.valueOf(alertCondition.getVariables().get("temp_input_lower"));
         double tempUpperBound = Double.valueOf(alertCondition.getVariables().get("temp_input_upper"));

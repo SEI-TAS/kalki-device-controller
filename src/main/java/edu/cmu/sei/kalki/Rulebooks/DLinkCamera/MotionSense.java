@@ -13,7 +13,7 @@ public class MotionSense extends RulebookRule {
     public MotionSense(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("DLinkCamera-motion-sense");
+        setAlertCondition("dlc-motion-sense");
 
         boolean conditionIsTrue = false; // condition: motion_sense == true && PHLE.isOn == false
 

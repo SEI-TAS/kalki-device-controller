@@ -36,7 +36,7 @@ public class Gyro extends ThreeAxisRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        setAlertCondition("UdooNeo-gyro");
+        setAlertCondition("unts-gyro");
 
         double gyroX = Double.valueOf(status.getAttributes().get("gyroscopeX"));
         double gyroY = Double.valueOf(status.getAttributes().get("gyroscopeY"));

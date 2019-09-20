@@ -16,7 +16,7 @@ public class MagnetometerOnline extends RulebookRule {
 
     public boolean conditionIsTrue(){
 
-        setAlertCondition("UdooNeo-magnetometer-online");
+        setAlertCondition("unts-magnetometer-online");
         return false;
     }
 
