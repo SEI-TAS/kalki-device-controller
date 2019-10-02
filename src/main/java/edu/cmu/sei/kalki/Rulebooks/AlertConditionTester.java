@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 import com.deliveredtechnologies.rulebook.FactMap;
 import com.deliveredtechnologies.rulebook.NameValueReferableMap;
 import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
-import edu.cmu.sei.ttg.kalki.models.DeviceType;
 
 public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
@@ -21,11 +20,12 @@ public class AlertConditionTester {
         Device device = Postgres.findDevice(status.getDeviceId());
         List<AlertCondition> alertConditionList = Postgres.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
-        RuleBookRunner ruleBookRunner = prepareRulebook(device.getType());
+        RuleBookRunner ruleBookRunner = prepareRulebook(device.getType().getName());
 
         logger.info("[AlertConditionTester] Running rulebook for DeviceStatus: "+status.getId());
         ruleBookRunner.run(factMap);
     }
+
 
     private static NameValueReferableMap prepareFactMap(Device device, DeviceStatus status, List<AlertCondition> alertConditionList) {
         NameValueReferableMap facts = new FactMap();
@@ -35,25 +35,11 @@ public class AlertConditionTester {
         return facts;
     }
 
-    private static RuleBookRunner prepareRulebook(DeviceType deviceType){
+    private static RuleBookRunner prepareRulebook(String deviceType) {
         RuleBookRunner ruleBookRunner = null;
-
-        switch (deviceType.getId()){
-            case 1: // DLC
-                ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.dlc");
-                break;
-            case 2: // UNTS
-                ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.unts");
-                break;
-            case 3: //WeMo
-                ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.wemo");
-                break;
-            case 4: // PHLE
-                ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks.phle");
-                break;
-            default:
-                logger.severe("System not configured to test statuses for DeviceType: " + deviceType.getName());
-        }
+        deviceType = deviceType.replaceAll("\\s","");
+        logger.info("[AlertConditionTester] "+deviceType+" rulebook selected");
+        ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks."+deviceType);
 
         return ruleBookRunner;
     }

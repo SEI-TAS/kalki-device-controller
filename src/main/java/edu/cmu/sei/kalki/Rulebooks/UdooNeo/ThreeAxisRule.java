@@ -1,4 +1,4 @@
-package edu.cmu.sei.kalki.rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 import com.deliveredtechnologies.rulebook.annotation.*;

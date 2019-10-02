@@ -1,9 +1,5 @@
-package edu.cmu.sei.kalki.rulebooks.wemo;
+package edu.cmu.sei.kalki.rulebooks.WeMoInsight;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
@@ -18,18 +14,19 @@ public class CurrentMwGreater extends RulebookRule {
     public boolean conditionIsTrue(){
         double currentmw = Double.valueOf(status.getAttributes().get("currentpower"));
 
-        if(currentmw > currentMwHightThreshold) {
-            setAlertName("wemo-current-mw-greater-high");
+        setAlertCondition("wemo-current-mw-greater-high");
+        double threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
+        if(currentmw > threshold) {
             return true;
-        }
-        else if(currentmw > currentMwLowThreshold){
-            setAlertName("wemo-current-mw-greater-low");
-            return true;
-        }
-        else {
-            return false;
         }
 
+        setAlertCondition("wemo-current-mw-greater-low");
+        threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
+        if(currentmw > threshold){
+            return true;
+        }
+
+        return false;
     }
 
 }
