@@ -17,6 +17,7 @@ public class ApiServerStartup {
             Server httpServer = new Server(SERVER_PORT);
             ServletContextHandler handler = new ServletContextHandler(httpServer, API_URL);
             handler.addServlet(DeviceStatusServlet.class, "/new-status");
+            handler.addServlet(StageLogServlet.class, "/new-stage-log");
             httpServer.start();
 
             logger.info("[ApiServerStartup] Server started at URI: "+httpServer.getURI().toString());
