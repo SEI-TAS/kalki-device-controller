@@ -5,6 +5,7 @@ import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.models.Device;
 import edu.cmu.sei.ttg.kalki.models.DeviceCommand;
 import edu.cmu.sei.ttg.kalki.models.DeviceSecurityState;
+import edu.cmu.sei.ttg.kalki.models.StageLog;
 import org.json.JSONObject;
 
 import java.io.OutputStreamWriter;
@@ -15,9 +16,7 @@ import java.util.logging.Logger;
 
 public class NewSecurityStateHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
-
-//    private String apiUrl = "http://10.27.153.2:5050/iot-interface-api"; //production url
-    private String apiUrl; //test url
+    private String apiUrl;
 
     public NewSecurityStateHandler(String endpoint) { apiUrl = endpoint+"/send-command"; }
 
@@ -27,6 +26,7 @@ public class NewSecurityStateHandler implements InsertHandler {
         Device device = Postgres.findDevice(ss.getDeviceId());
         List<DeviceCommand> commandList = Postgres.findCommandsByDevice(device);
 
+        logSendCommandReact(device, commandList.size());
         sendToIotInterface(device, commandList);
     }
 
@@ -49,5 +49,10 @@ public class NewSecurityStateHandler implements InsertHandler {
             logger.severe("[NewSecurityStateHandler] Error sending device and commands to IoT Interface API: "+dev.toString());
             logger.severe(e.getMessage());
         }
+    }
+
+    private void logSendCommandReact(Device device, int numCommands) {
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.SEND_COMMAND, StageLog.Stage.REACT, "Sending "+numCommands+" commands to IoT Interface");
+        log.insert();
     }
 }

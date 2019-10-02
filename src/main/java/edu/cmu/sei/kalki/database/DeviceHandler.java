@@ -3,6 +3,7 @@ package edu.cmu.sei.kalki.database;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.ttg.kalki.models.StageLog;
 import org.json.JSONObject;
 
 import java.io.OutputStreamWriter;
@@ -23,6 +24,7 @@ public class DeviceHandler implements InsertHandler {
     @Override
     public void handleNewInsertion(int newDeviceId) {
         Device device = Postgres.findDevice(newDeviceId);
+        logSampleRateIncreaseReact(device);
         sendToIotInterface(device);
     }
 
@@ -47,6 +49,11 @@ public class DeviceHandler implements InsertHandler {
             }
         }
 
+    }
+
+    private void logSampleRateIncreaseReact(Device device) {
+        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.REACT, "Increase sample rate for device: "+device.getId());
+        log.insert();
     }
 
     private void sleep(int millis) {
