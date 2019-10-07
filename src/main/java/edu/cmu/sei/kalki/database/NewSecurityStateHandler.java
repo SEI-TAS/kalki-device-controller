@@ -24,10 +24,21 @@ public class NewSecurityStateHandler implements InsertHandler {
     public void handleNewInsertion(int newStateId) {
         DeviceSecurityState ss = Postgres.findDeviceSecurityState(newStateId);
         Device device = Postgres.findDevice(ss.getDeviceId());
-        List<DeviceCommand> commandList = Postgres.findCommandsByDevice(device);
 
-        logSendCommandReact(device, commandList.size());
-        sendToIotInterface(device, commandList);
+        // find devices in group
+        List<Device> groupDevices = Postgres.findDevicesByGroup(device.getGroup().getId());
+        if (groupDevices != null && groupDevices.size()>0){ // device is in a group
+            for (Device d: groupDevices){
+                List<DeviceCommand> commandList = Postgres.findCommandsForGroup(d, device);
+                sendToIotInterface(d, commandList);
+                logSendCommandReact(device, commandList.size());
+            }
+        } else {
+            List<DeviceCommand> commandList = Postgres.findCommandsByDevice(device);
+            sendToIotInterface(device, commandList);
+            logSendCommandReact(device, commandList.size());
+        }
+
     }
 
     private void sendToIotInterface(Device dev, List<DeviceCommand> comms) {
