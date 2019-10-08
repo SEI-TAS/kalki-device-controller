@@ -20,7 +20,13 @@ public class CurrentMwGreater extends RulebookRule {
             return true;
         }
 
+
         setAlertCondition("wemo-current-mw-greater-low");
+
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
+
         threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         if(currentmw > threshold){
             return true;
