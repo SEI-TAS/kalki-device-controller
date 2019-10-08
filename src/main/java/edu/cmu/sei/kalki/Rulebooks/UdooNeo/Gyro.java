@@ -2,9 +2,10 @@ package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 
 import com.deliveredtechnologies.rulebook.annotation.*;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
-public class Gyro extends ThreeAxisRule {
+public class Gyro extends RulebookRule {
     private final double gyroXLowerBound = -45;
     private final double gyroXUpperBound = 45;
     private final double gyroYLowerBound = -60;
@@ -38,22 +39,11 @@ public class Gyro extends ThreeAxisRule {
     public boolean conditionIsTrue(){
         setAlertCondition("unts-gyro");
 
-        double gyroX = Double.valueOf(status.getAttributes().get("gyroscopeX"));
-        double gyroY = Double.valueOf(status.getAttributes().get("gyroscopeY"));
-        double gyroZ = Double.valueOf(status.getAttributes().get("gyroscopeZ"));
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
 
-        double gyroXBound = Double.valueOf(alertCondition.getVariables().get("gyroerometerX"));
-        double gyroYBound = Double.valueOf(alertCondition.getVariables().get("gyroerometerY"));
-        double gyroZBound = Double.valueOf(alertCondition.getVariables().get("gyroerometerZ"));
-        double gyroModLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
-        if (	alertingAxis(gyroX, (gyroXBound*-1), gyroXBound) ||
-                alertingAxis(gyroY, (gyroYBound*-1), gyroYBound) ||
-                alertingAxis(gyroZ, (gyroZBound*-1), gyroZBound) ||
-                alertingModulus(gyroX, gyroY, gyroZ, gyroModLimit)) {
-            return true;
-        }
-
-        return false;
+        return ThreeAxisUtil.checkRawValues(status, alertCondition, "gyroscope");
     }
 
 }

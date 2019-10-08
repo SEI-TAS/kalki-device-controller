@@ -30,6 +30,11 @@ public class Temperature extends RulebookRule {
      */
     public boolean conditionIsTrue(){
         setAlertCondition("unts-temperature");
+
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
+
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         double tempLowerBound = Double.valueOf(alertCondition.getVariables().get("temp_input_lower"));
         double tempUpperBound = Double.valueOf(alertCondition.getVariables().get("temp_input_upper"));

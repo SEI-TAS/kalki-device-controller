@@ -14,6 +14,11 @@ public class TemperatureAverage extends RulebookRule {
 
     public boolean conditionIsTrue(){
         setAlertCondition("unts-temperature-avg");
+
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
+
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
 

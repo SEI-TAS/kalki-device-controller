@@ -1,9 +1,10 @@
 package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
-public class Magnetometer extends ThreeAxisRule {
+public class Magnetometer extends RulebookRule {
     private final double magXLowerBound = 80.0;
     private final double magXUpperBound = 90.0;
     private final double magYLowerBound = 80.0;
@@ -39,23 +40,11 @@ public class Magnetometer extends ThreeAxisRule {
     public boolean conditionIsTrue(){
         setAlertCondition("unts-magnetometer");
 
-        double magX = Double.valueOf(status.getAttributes().get("magnetometerX"));
-        double magY = Double.valueOf(status.getAttributes().get("magnetometerY"));
-        double magZ = Double.valueOf(status.getAttributes().get("magnetometerZ"));
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
 
-        double magXBound = Double.valueOf(alertCondition.getVariables().get("magnetometerX"));
-        double magYBound = Double.valueOf(alertCondition.getVariables().get("magnetometerY"));
-        double magZBound = Double.valueOf(alertCondition.getVariables().get("magnetometerZ"));
-        double magModLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
-
-        if(     alertingAxis(magX, (magXBound*-1), magXBound) ||
-                alertingAxis(magY, (magYBound*-1), magYBound) ||
-                alertingAxis(magZ, (magZBound*-1), magZBound) ||
-                alertingModulus(magX, magY, magZ, magModLimit)){
-            return true;
-        }
-
-        return false;
+        return ThreeAxisUtil.checkRawValues(status, alertCondition, "magnetometer");
     }
 
 }

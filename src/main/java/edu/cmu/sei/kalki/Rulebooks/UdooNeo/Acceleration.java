@@ -1,10 +1,11 @@
 package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 
 @Rule()
-public class Acceleration extends ThreeAxisRule {
+public class Acceleration extends RulebookRule {
 
 	public Acceleration(){ }
 
@@ -32,23 +33,10 @@ public class Acceleration extends ThreeAxisRule {
 	public boolean conditionIsTrue(){
 		setAlertCondition("unts-acceleration");
 
-		double accelX = Double.valueOf(status.getAttributes().get("accelerometerX"));
-		double accelY = Double.valueOf(status.getAttributes().get("accelerometerY"));
-		double accelZ = Double.valueOf(status.getAttributes().get("accelerometerZ"));
+		String stateCondition = alertCondition.getVariables().get("state");
+		if(!device.getCurrentState().getName().equals(stateCondition))
+			return false;
 
-		double accelXBound = Double.valueOf(alertCondition.getVariables().get("accelerometerX"));
-		double accelYBound = Double.valueOf(alertCondition.getVariables().get("accelerometerY"));
-		double accelZBound = Double.valueOf(alertCondition.getVariables().get("accelerometerZ"));
-		double accelModLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
-		System.out.println("Actual: "+accelX+","+accelY+","+accelZ);
-		System.out.println("Bounds: "+accelXBound+","+accelYBound+","+accelYBound);
-		if (	alertingAxis(accelX, (accelXBound*-1), accelXBound) ||
-				alertingAxis(accelY, (accelYBound*-1), accelYBound) ||
-				alertingAxis(accelZ, (accelZBound*-1), accelZBound) ||
-				alertingModulus(accelX, accelY, accelZ, accelModLimit)) {
-			return true;
-		}
-
-		return false;
+		return ThreeAxisUtil.checkRawValues(status, alertCondition, "accelerometer");
 	}
 }
