@@ -20,10 +20,12 @@ public class AlertConditionTester {
         Device device = Postgres.findDevice(status.getDeviceId());
         List<AlertCondition> alertConditionList = Postgres.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
-        RuleBookRunner ruleBookRunner = prepareRulebook(device.getType().getName());
+        RuleBookRunner deviceSpecific = prepareRulebook(device.getType().getName());
+        RuleBookRunner allDevices = prepareRulebook("AllDevices");
 
-        logger.info("[AlertConditionTester] Running rulebook for DeviceStatus: "+status.getId());
-        ruleBookRunner.run(factMap);
+        logger.info("[AlertConditionTester] Running rulebooks for DeviceStatus: "+status.getId());
+        deviceSpecific.run(factMap);
+        allDevices.run(factMap);
     }
 
 
