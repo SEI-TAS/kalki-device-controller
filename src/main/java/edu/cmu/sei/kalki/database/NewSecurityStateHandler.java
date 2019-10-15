@@ -43,6 +43,8 @@ public class NewSecurityStateHandler implements InsertHandler {
     }
 
     private void sendToIotInterface(Device dev, List<DeviceCommand> comms) {
+//        if(comms.size() == 0)
+//            return;
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
@@ -51,9 +53,8 @@ public class NewSecurityStateHandler implements InsertHandler {
             OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
 
             JSONObject json = new JSONObject();
-            json.put("device", dev.toString());
             json.put("command-list", comms);
-
+            json.put("device",new JSONObject(dev.toString()));
             out.write(json.toString());
             out.close();
             httpCon.getInputStream();
