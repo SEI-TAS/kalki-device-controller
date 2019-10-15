@@ -26,14 +26,15 @@ public class NewSecurityStateHandler implements InsertHandler {
         Device device = Postgres.findDevice(ss.getDeviceId());
 
         // find devices in group
-        List<Device> groupDevices = Postgres.findDevicesByGroup(device.getGroup().getId());
-        if (groupDevices != null && groupDevices.size()>0){ // device is in a group
+        if(device.getGroup()!= null){
+            List<Device> groupDevices = Postgres.findDevicesByGroup(device.getGroup().getId());
             for (Device d: groupDevices){
                 List<DeviceCommand> commandList = Postgres.findCommandsForGroup(d, device);
                 sendToIotInterface(d, commandList);
                 logSendCommandReact(device, commandList.size());
             }
-        } else {
+        }
+         else {
             List<DeviceCommand> commandList = Postgres.findCommandsByDevice(device);
             sendToIotInterface(device, commandList);
             logSendCommandReact(device, commandList.size());
