@@ -25,6 +25,7 @@ public class DeviceHandler implements InsertHandler {
 
     @Override
     public void handleNewInsertion(int newDeviceId) {
+        logger.info("[DeviceHandler] Device found: "+newDeviceId+". Is it new? "+newDevice);
         Device device = Postgres.findDevice(newDeviceId);
         logSampleRateIncreaseReact(device);
         sendToIotInterface(device);
