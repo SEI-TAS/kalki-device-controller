@@ -16,9 +16,11 @@ public class DeviceHandler implements InsertHandler {
     private final int ATTEMPTS = 15;
 
     private String apiUrl;
+    private boolean newDevice;
 
-    DeviceHandler(String endpoint) {
+    DeviceHandler(String endpoint, boolean newDev) {
         apiUrl = endpoint;
+        newDevice = newDev;
     }
 
     @Override
@@ -52,8 +54,10 @@ public class DeviceHandler implements InsertHandler {
     }
 
     private void logSampleRateIncreaseReact(Device device) {
-        StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.REACT, "Increase sample rate for device: "+device.getId());
-        log.insert();
+        if(!newDevice){
+            StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.REACT, "Device updated: "+device.getId());
+            log.insert();
+        }
     }
 
     private void sleep(int millis) {
