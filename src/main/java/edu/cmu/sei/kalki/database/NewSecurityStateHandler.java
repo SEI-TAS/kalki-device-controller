@@ -30,21 +30,24 @@ public class NewSecurityStateHandler implements InsertHandler {
             List<Device> groupDevices = Postgres.findDevicesByGroup(device.getGroup().getId());
             for (Device d: groupDevices){
                 List<DeviceCommand> commandList = Postgres.findCommandsForGroup(d, device);
-                sendToIotInterface(d, commandList);
-                logSendCommandReact(device, commandList.size());
+                handleCommands(d, device, commandList);
             }
         }
          else {
             List<DeviceCommand> commandList = Postgres.findCommandsByDevice(device);
-            sendToIotInterface(device, commandList);
-            logSendCommandReact(device, commandList.size());
+            handleCommands(device, device, commandList);
         }
 
     }
 
+    private void handleCommands(Device commandDevice, Device stateDevice, List<DeviceCommand> commands) {
+        if(commands.size() < 1)
+            return;
+        sendToIotInterface(commandDevice, commands);
+        logSendCommandReact(stateDevice, commands.size());
+    }
+
     private void sendToIotInterface(Device dev, List<DeviceCommand> comms) {
-//        if(comms.size() == 0)
-//            return;
         try {
             URL url = new URL(apiUrl);
             HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
