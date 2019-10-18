@@ -1,10 +1,11 @@
-package Rulebooks.unts;
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
 
 
 import com.deliveredtechnologies.rulebook.annotation.*;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
-public class Gyro extends ThreeAxisRule {
+public class Gyro extends RulebookRule {
     private final double gyroXLowerBound = -45;
     private final double gyroXUpperBound = 45;
     private final double gyroYLowerBound = -60;
@@ -36,19 +37,13 @@ public class Gyro extends ThreeAxisRule {
      * @return
      */
     public boolean conditionIsTrue(){
-        double gyroX = Double.valueOf(status.getAttributes().get("gyroscopeX"));
-        double gyroY = Double.valueOf(status.getAttributes().get("gyroscopeY"));
-        double gyroZ = Double.valueOf(status.getAttributes().get("gyroscopeZ"));
+        setAlertCondition("unts-gyro");
 
-        if (    alertingAxis(gyroX, gyroXLowerBound, gyroXUpperBound) ||
-                alertingAxis(gyroY, gyroYLowerBound, gyroYUpperBound) ||
-                alertingAxis(gyroZ, gyroZLowerBound, gyroZUpperBound) ||
-                alertingModulus(gyroX, gyroY, gyroZ, gyroModLimit)) {
-            setAlertName("unts-gyro");
-            return true;
-        }
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
 
-        return false;
+        return ThreeAxisUtil.checkRawValues(status, alertCondition, "gyroscope");
     }
 
 }

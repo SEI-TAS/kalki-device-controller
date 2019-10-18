@@ -1,11 +1,7 @@
-package Rulebooks.wemo;
+package edu.cmu.sei.kalki.rulebooks.WeMoInsight;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
 public class TimeOn extends RulebookRule {
@@ -13,11 +9,14 @@ public class TimeOn extends RulebookRule {
     public TimeOn(){ }
 
     public boolean conditionIsTrue(){
+        setAlertCondition("WeMoInsight-time-on");
+
+        int onTimeThreshold = Integer.valueOf(alertCondition.getVariables().get("today_on_time"));
+
         // today_on_time is in seconds
         int onTime = Integer.valueOf(status.getAttributes().get("today_on_time"));
 
-        if (onTime > 32400){
-            setAlertName("wemo-time-on");
+        if (onTime > onTimeThreshold){
             return true;
         }
 

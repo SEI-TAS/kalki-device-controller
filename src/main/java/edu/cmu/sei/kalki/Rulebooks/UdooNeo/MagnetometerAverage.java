@@ -1,0 +1,21 @@
+package edu.cmu.sei.kalki.rulebooks.UdooNeo;
+
+import com.deliveredtechnologies.rulebook.annotation.Rule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
+
+@Rule()
+public class MagnetometerAverage extends RulebookRule {
+
+    public MagnetometerAverage() {}
+
+    @Override
+    public boolean conditionIsTrue() {
+        setAlertCondition("unts-magnetometer-avg");
+
+        String stateCondition = alertCondition.getVariables().get("state");
+        if(!device.getCurrentState().getName().equals(stateCondition))
+            return false;
+
+        return ThreeAxisUtil.checkAgainstAverages(status, alertCondition, device.getId(), "magnetometer");
+    }
+}

@@ -1,22 +1,20 @@
-package Rulebooks.phle;
+package edu.cmu.sei.kalki.rulebooks.PhilipsHueLightEmulator;
 
 import java.util.Map;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
+
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 import edu.cmu.sei.ttg.kalki.models.Device;
-import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
-import Rulebooks.RulebookRule;
+import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
 public class OddOneOut extends RulebookRule {
 
-    public OddOneOut(){
-
-    }
+    public OddOneOut(){ }
 
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = true;
+        setAlertCondition("phle-odd-one-out");
 
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
@@ -33,7 +31,6 @@ public class OddOneOut extends RulebookRule {
             }
         }
 
-        setAlertName("phle-odd-one-out");
         return conditionIsTrue;
     }
 }
