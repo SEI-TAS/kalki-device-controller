@@ -4,18 +4,18 @@ import com.deliveredtechnologies.rulebook.annotation.Rule;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 
 @Rule()
-public class GyroAverage extends RulebookRule {
+public class MagnetometerAverage extends RulebookRule {
 
-    public GyroAverage() {}
+    public MagnetometerAverage() {}
 
     @Override
     public boolean conditionIsTrue() {
-        setAlertCondition("unts-gyro-avg");
+        setAlertCondition("unts-magnetometer-avg");
 
         String stateCondition = alertCondition.getVariables().get("state");
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkAgainstAverages(status, alertCondition, device.getId(), "gyroscope");
+        return ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(), "magnetometer");
     }
 }
