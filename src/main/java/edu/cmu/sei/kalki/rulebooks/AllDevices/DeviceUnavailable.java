@@ -16,7 +16,7 @@ public class DeviceUnavailable extends RulebookRule {
 
 
         // if diff between timestamps is > 5*sampling rate
-        if(deviceStatuses.size() < 2){
+        if(deviceStatuses.size() > 2){
             long timestamp2 = deviceStatuses.get(1).getTimestamp().getTime();
             long timestamp1 = deviceStatuses.get(0).getTimestamp().getTime();
 
