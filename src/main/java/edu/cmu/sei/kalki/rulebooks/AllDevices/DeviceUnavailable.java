@@ -14,7 +14,7 @@ public class DeviceUnavailable extends RulebookRule {
     public boolean conditionIsTrue() {
         setAlertCondition("device-unavailable");
 
-        List<DeviceStatus> deviceStatuses = Postgres.findSubsetNDeviceStatuses(device.getId(),status.getId(), 1);
+        List<DeviceStatus> deviceStatuses = Postgres.findSubsetNDeviceStatuses(device.getId(), 1, status.getId());
         System.out.println("\nstatuses length: "+deviceStatuses.size());
 
         // if diff between timestamps is > 5*sampling rate
