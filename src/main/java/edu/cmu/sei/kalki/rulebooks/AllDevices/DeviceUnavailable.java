@@ -1,11 +1,13 @@
 package edu.cmu.sei.kalki.rulebooks.AllDevices;
 
+import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.rulebooks.RulebookRule;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
 
 import java.util.List;
 
+@Rule()
 public class DeviceUnavailable extends RulebookRule {
 
     @Override
@@ -13,7 +15,7 @@ public class DeviceUnavailable extends RulebookRule {
         setAlertCondition("device-unavailable");
 
         List<DeviceStatus> deviceStatuses = Postgres.findNDeviceStatuses(device.getId(), 2);
-
+        System.out.println("\nstatuses length: "+deviceStatuses.size());
 
         // if diff between timestamps is > 5*sampling rate
         if(deviceStatuses.size() > 2){
