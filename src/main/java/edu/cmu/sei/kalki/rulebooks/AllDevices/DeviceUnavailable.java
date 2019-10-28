@@ -14,12 +14,12 @@ public class DeviceUnavailable extends RulebookRule {
     public boolean conditionIsTrue() {
         setAlertCondition("device-unavailable");
 
-        List<DeviceStatus> deviceStatuses = Postgres.findNDeviceStatuses(device.getId(), 2);
+        List<DeviceStatus> deviceStatuses = Postgres.findSubsetNDeviceStatuses(device.getId(),status.getId(), 1);
         System.out.println("\nstatuses length: "+deviceStatuses.size());
 
         // if diff between timestamps is > 5*sampling rate
-        if(deviceStatuses.size() > 2){
-            long timestamp2 = deviceStatuses.get(1).getTimestamp().getTime();
+        if(deviceStatuses.size() > 0){
+            long timestamp2 = status.getTimestamp().getTime();
             long timestamp1 = deviceStatuses.get(0).getTimestamp().getTime();
             logger.info("\ntimestamp2: "+ timestamp2);
             logger.info("timestamp1: "+ timestamp1);
