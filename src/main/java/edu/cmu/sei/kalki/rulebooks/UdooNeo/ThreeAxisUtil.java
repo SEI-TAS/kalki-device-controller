@@ -13,38 +13,34 @@ public class ThreeAxisUtil {
     public ThreeAxisUtil () { }
 
     public static boolean checkRawValues(DeviceStatus status, AlertCondition alertCondition, String sensor) {
-        double x = Double.valueOf(status.getAttributes().get(sensor+"X"));
-        double y = Double.valueOf(status.getAttributes().get(sensor+"Y"));
-        double z = Double.valueOf(status.getAttributes().get(sensor+"Z"));
-        double modulus = Math.sqrt(x*x + y*y + z*z);
+        HashMap<String, Double> values = new HashMap<>();
+        values.put("x", Double.valueOf(status.getAttributes().get(sensor+"X")));
+        values.put("y", Double.valueOf(status.getAttributes().get(sensor+"Y")));
+        values.put("z", Double.valueOf(status.getAttributes().get(sensor+"Z")));
+        values.put("mod", Math.sqrt(Math.pow(values.get("x"), 2) + Math.pow(values.get("y"), 2) + Math.pow(values.get("z"), 2)));
 
+        return compareToConditions(values, alertCondition, sensor);
+    }
+
+    public static boolean checkAgainstAverages(AlertCondition alertCondition, int deviceId, String sensor) {
+        int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
+        List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(deviceId, numStatuses);
+
+        HashMap<String, Double> averages = calculateAverages(lastNStatuses, sensor);
+
+        return compareToConditions(averages, alertCondition, sensor);
+    }
+
+    private static boolean compareToConditions(HashMap<String, Double> values, AlertCondition alertCondition, String sensor) {
         double xBound = Double.valueOf(alertCondition.getVariables().get(sensor+"X"));
         double yBound = Double.valueOf(alertCondition.getVariables().get(sensor+"Y"));
         double zBound = Double.valueOf(alertCondition.getVariables().get(sensor+"Z"));
         double modLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
 
-        if (	ThreeAxisUtil.alertingAxis(x, (xBound*-1), xBound) ||
-                ThreeAxisUtil.alertingAxis(y, (yBound*-1), yBound) ||
-                ThreeAxisUtil.alertingAxis(z, (zBound*-1), zBound) ||
-                ThreeAxisUtil.alertingModulus(modulus, modLimit)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    public static boolean checkAgainstAverages(DeviceStatus status, AlertCondition alertCondition, int deviceId, String sensor) {
-        int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
-        List<DeviceStatus> lastNStatuses = Postgres.findSubsetNDeviceStatuses(deviceId, numStatuses, status.getId());
-
-        HashMap<String, Double> averages = calculateAverages(lastNStatuses, sensor);
-
-        double x = Math.abs(Double.valueOf(status.getAttributes().get(sensor+"X")));
-        double y = Math.abs(Double.valueOf(status.getAttributes().get(sensor+"Y")));
-        double z = Math.abs(Double.valueOf(status.getAttributes().get(sensor+"Z")));
-        double mod = Math.sqrt(x*x + y*y + z*z);
-
-        if(x > averages.get("x") || y > averages.get("y") || z > averages.get("z") || mod > averages.get("mod")){
+        if (	alertingAxis(values.get("x"), (xBound*-1), xBound) ||
+                alertingAxis(values.get("y"), (yBound*-1), yBound) ||
+                alertingAxis(values.get("z"), (zBound*-1), zBound) ||
+                alertingModulus(values.get("mod"), modLimit)) {
             return true;
         }
 
