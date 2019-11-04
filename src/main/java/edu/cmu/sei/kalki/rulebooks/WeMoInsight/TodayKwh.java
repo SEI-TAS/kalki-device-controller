@@ -9,7 +9,7 @@ public class TodayKwh extends RulebookRule {
     public TodayKwh(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("WeMoInsight-today-kwh");
+        setAlertCondition("wemo-today-kwh");
         double todayKwHThreshold = Double.valueOf(alertCondition.getVariables().get("today_kwh"));
         double todayKwH = Double.valueOf(status.getAttributes().get("today_kwh"));
 

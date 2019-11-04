@@ -22,7 +22,7 @@ public class ApiServerStartup {
 
             logger.info("[ApiServerStartup] Server started at URI: "+httpServer.getURI().toString());
         } catch (Exception e) {
-            logger.severe("[ApiServerStartup] Error starting IoT Interface API Server:");
+            logger.severe("[ApiServerStartup] Error starting Device Controller API Server:");
             logger.severe(e.getMessage());
         }
     }

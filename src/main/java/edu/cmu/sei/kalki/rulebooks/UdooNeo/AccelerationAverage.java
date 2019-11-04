@@ -16,6 +16,6 @@ public class AccelerationAverage extends RulebookRule {
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkAgainstAverages(status, alertCondition, device.getId(),"accelerometer");
+        return ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(),"accelerometer");
     }
 }

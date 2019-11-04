@@ -58,6 +58,7 @@ public class DeviceHandler implements InsertHandler {
         if(!newDevice){
             StageLog log = new StageLog(device.getCurrentState().getId(), StageLog.Action.INCREASE_SAMPLE_RATE, StageLog.Stage.REACT, "Device updated: "+device.getId());
             log.insert();
+            logger.info("[DeviceHandler] Logging react to device being updated: "+log.toString());
         }
     }
 

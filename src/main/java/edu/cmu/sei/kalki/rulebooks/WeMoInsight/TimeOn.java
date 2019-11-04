@@ -9,7 +9,7 @@ public class TimeOn extends RulebookRule {
     public TimeOn(){ }
 
     public boolean conditionIsTrue(){
-        setAlertCondition("WeMoInsight-time-on");
+        setAlertCondition("wemo-time-on");
 
         int onTimeThreshold = Integer.valueOf(alertCondition.getVariables().get("today_on_time"));
 
