@@ -15,7 +15,7 @@ public class OddOneOut extends RulebookRule {
     public boolean conditionIsTrue(){
         boolean conditionIsTrue = true;
         setAlertCondition("phle-odd-one-out");
-
+        alertInfo = "This light was the only one on in its group.";
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
             // get other devices of same type, check their status

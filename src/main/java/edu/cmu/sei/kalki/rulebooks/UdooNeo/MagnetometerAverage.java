@@ -16,6 +16,8 @@ public class MagnetometerAverage extends RulebookRule {
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(), "magnetometer");
+        ThreeAxisResult result = ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(), "magnetometer");
+        alertInfo = result.getAlertInfo();
+        return result.isConditionIsTrue();
     }
 }

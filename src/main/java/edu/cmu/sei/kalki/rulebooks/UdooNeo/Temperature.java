@@ -38,7 +38,12 @@ public class Temperature extends RulebookRule {
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         double tempLowerBound = Double.valueOf(alertCondition.getVariables().get("temp_input_lower"));
         double tempUpperBound = Double.valueOf(alertCondition.getVariables().get("temp_input_upper"));
-        if (temp < tempLowerBound || temp > tempUpperBound){
+        if (temp < tempLowerBound){
+            alertInfo = "Temperature was less than "+tempLowerBound;
+            return true;
+        }
+        else if (temp > tempUpperBound) {
+            alertInfo = "Temperature was greater than "+tempUpperBound;
             return true;
         }
         return false;

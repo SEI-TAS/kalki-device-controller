@@ -30,6 +30,7 @@ public class CurrentMwGreaterSuspicious extends RulebookRule {
                 return false;
         }
 
+        alertInfo = "Current mw was greater than "+threshold+" for last "+duration+" minutes";
         return true;
     }
 }

@@ -43,7 +43,9 @@ public class Gyro extends RulebookRule {
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkRawValues(status, alertCondition, "gyroscope");
+        ThreeAxisResult result = ThreeAxisUtil.checkRawValues(status, alertCondition, "gyroscope");
+        alertInfo = result.getAlertInfo();
+        return result.isConditionIsTrue();
     }
 
 }

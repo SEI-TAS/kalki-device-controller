@@ -12,7 +12,7 @@ public class ThreeAxisUtil {
 
     public ThreeAxisUtil () { }
 
-    public static boolean checkRawValues(DeviceStatus status, AlertCondition alertCondition, String sensor) {
+    public static ThreeAxisResult checkRawValues(DeviceStatus status, AlertCondition alertCondition, String sensor) {
         HashMap<String, Double> values = new HashMap<>();
         values.put("x", Double.valueOf(status.getAttributes().get(sensor+"X")));
         values.put("y", Double.valueOf(status.getAttributes().get(sensor+"Y")));
@@ -22,7 +22,7 @@ public class ThreeAxisUtil {
         return compareToConditions(values, alertCondition, sensor);
     }
 
-    public static boolean checkAgainstAverages(AlertCondition alertCondition, int deviceId, String sensor) {
+    public static ThreeAxisResult checkAgainstAverages(AlertCondition alertCondition, int deviceId, String sensor) {
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
         List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(deviceId, numStatuses);
 
@@ -31,20 +31,27 @@ public class ThreeAxisUtil {
         return compareToConditions(averages, alertCondition, sensor);
     }
 
-    private static boolean compareToConditions(HashMap<String, Double> values, AlertCondition alertCondition, String sensor) {
+    private static ThreeAxisResult compareToConditions(HashMap<String, Double> values, AlertCondition alertCondition, String sensor) {
         double xBound = Double.valueOf(alertCondition.getVariables().get(sensor+"X"));
         double yBound = Double.valueOf(alertCondition.getVariables().get(sensor+"Y"));
         double zBound = Double.valueOf(alertCondition.getVariables().get(sensor+"Z"));
         double modLimit = Double.valueOf(alertCondition.getVariables().get("modulus"));
 
-        if (	alertingAxis(values.get("x"), (xBound*-1), xBound) ||
-                alertingAxis(values.get("y"), (yBound*-1), yBound) ||
-                alertingAxis(values.get("z"), (zBound*-1), zBound) ||
-                alertingModulus(values.get("mod"), modLimit)) {
-            return true;
+        ThreeAxisResult result = new ThreeAxisResult(false, "");
+        if (alertingAxis(values.get("x"), (xBound*-1), xBound)){
+            result = new ThreeAxisResult(true, "Triggered by x-axis value.");
+        }
+        else if(alertingAxis(values.get("y"), (yBound*-1), yBound)) {
+            result = new ThreeAxisResult(true, "Triggered by y-axis value.");
+        }
+        else if(alertingAxis(values.get("z"), (zBound*-1), zBound)) {
+            result = new ThreeAxisResult(true, "Triggered by z-axis value.");
+        }
+        else if(alertingModulus(values.get("mod"), modLimit)) {
+            result = new ThreeAxisResult(true, "Triggered by calculated modulus.");
         }
 
-        return false;
+        return result;
     }
 
     private static boolean alertingAxis(double axis, double lowerBound, double upperBound) {

@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public abstract class RulebookRule {
 	protected Logger logger = Logger.getLogger("device-controller");
 	protected AlertCondition alertCondition;
+	protected String alertInfo;
 
 	@Given("device")
 	protected Device device;
@@ -42,7 +43,7 @@ public abstract class RulebookRule {
 	public void then(){
 		logger.info("[RulebookRule] Alert triggered: "+alertCondition.getAlertTypeName()+" for status: "+status.getId());
 		AlertTypeLookup atl = Postgres.findAlertTypeLookup(alertCondition.getAlertTypeLookupId());
-		Alert alert = new Alert(alertCondition.getAlertTypeName(), status.getId(), atl.getAlertTypeId());
+		Alert alert = new Alert(alertCondition.getAlertTypeName(), status.getId(), atl.getAlertTypeId(), alertInfo);
 		alert.insert();
 	}
 
@@ -55,6 +56,7 @@ public abstract class RulebookRule {
 		for(AlertCondition c: alertConditions){
 			if(c.getAlertTypeName().equals(name)){
 				alertCondition = c;
+				alertInfo = "";
 				break;
 			}
 		}
