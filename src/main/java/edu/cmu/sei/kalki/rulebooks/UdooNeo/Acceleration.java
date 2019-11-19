@@ -37,6 +37,8 @@ public class Acceleration extends RulebookRule {
 		if(!device.getCurrentState().getName().equals(stateCondition))
 			return false;
 
-		return ThreeAxisUtil.checkRawValues(status, alertCondition, "accelerometer");
+		ThreeAxisResult result = ThreeAxisUtil.checkRawValues(status, alertCondition, "accelerometer");
+		alertInfo = result.getAlertInfo();
+		return result.isConditionIsTrue();
 	}
 }

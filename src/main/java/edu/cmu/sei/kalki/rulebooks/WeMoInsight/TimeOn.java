@@ -17,6 +17,7 @@ public class TimeOn extends RulebookRule {
         int onTime = Integer.valueOf(status.getAttributes().get("today_on_time"));
 
         if (onTime > onTimeThreshold){
+            alertInfo = "Today on time was greater than "+onTimeThreshold+" seconds";
             return true;
         }
 

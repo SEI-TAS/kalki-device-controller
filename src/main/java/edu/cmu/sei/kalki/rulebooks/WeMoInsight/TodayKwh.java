@@ -14,6 +14,7 @@ public class TodayKwh extends RulebookRule {
         double todayKwH = Double.valueOf(status.getAttributes().get("today_kwh"));
 
         if (todayKwH > todayKwHThreshold){
+            alertInfo = "Today kwh was greater than "+todayKwHThreshold;
             return true;
         }
 

@@ -44,7 +44,9 @@ public class Magnetometer extends RulebookRule {
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkRawValues(status, alertCondition, "magnetometer");
+        ThreeAxisResult result = ThreeAxisUtil.checkRawValues(status, alertCondition, "magnetometer");
+        alertInfo = result.getAlertInfo();
+        return result.isConditionIsTrue();
     }
 
 }

@@ -27,6 +27,7 @@ public class MotionSense extends RulebookRule {
                 boolean isOnCondition = Boolean.parseBoolean(s.getAttributes().get("isOn"));
                 if(isOn == isOnCondition){ // a light is off
                     conditionIsTrue = true;
+                    alertInfo = "Motion sensed and a light is off!";
                 }
             }
         }

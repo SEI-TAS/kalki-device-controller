@@ -18,8 +18,8 @@ public class TimeOn extends RulebookRule {
      */
     public boolean conditionIsTrue(){
         setAlertCondition("phle-time-on");
-
         int lastOffCondition = Integer.parseInt(alertCondition.getVariables().get("time-last-change"));
+        alertInfo = "Light is on and motion has been detected within " + lastOffCondition +" minutes.";
 
         // this status is ON && time last change > condition
         if(Boolean.parseBoolean(status.getAttributes().get("isOn"))) {

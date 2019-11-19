@@ -16,6 +16,8 @@ public class GyroAverage extends RulebookRule {
         if(!device.getCurrentState().getName().equals(stateCondition))
             return false;
 
-        return ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(), "gyroscope");
+        ThreeAxisResult result = ThreeAxisUtil.checkAgainstAverages(alertCondition, device.getId(), "gyroscope");
+        alertInfo = result.getAlertInfo();
+        return result.isConditionIsTrue();
     }
 }

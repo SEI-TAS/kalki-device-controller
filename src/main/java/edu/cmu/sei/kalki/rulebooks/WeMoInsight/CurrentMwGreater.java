@@ -17,6 +17,7 @@ public class CurrentMwGreater extends RulebookRule {
         setAlertCondition("wemo-current-mw-greater-high");
         double threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         if(currentmw > threshold) {
+            alertInfo = "Current mw was greater than "+threshold;
             return true;
         }
 
@@ -29,6 +30,7 @@ public class CurrentMwGreater extends RulebookRule {
 
         threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         if(currentmw > threshold){
+            alertInfo = "Current mw was greater than "+threshold;
             return true;
         }
 

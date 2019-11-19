@@ -25,7 +25,12 @@ public class TemperatureAverage extends RulebookRule {
         List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(device.getId(), numStatuses);
         double avg = calculateAverage(lastNStatuses);
 
-        if(temp > (avg + 2) || temp < (avg - 2)){
+        if(temp > (avg + 2)){
+            alertInfo = "Temperature was greater than avg+2 (avg="+avg+")";
+            return true;
+        }
+        else if(temp < (avg -2)) {
+            alertInfo = "Temperature was less than avg-2 (avg="+avg+")";
             return true;
         }
         return false;
