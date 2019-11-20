@@ -23,7 +23,7 @@ public class DeviceUnavailable extends RulebookRule {
 
         //check that all 5 are null
         for(DeviceStatus status: deviceStatuses){
-            if(status.getAttributes() != null) //if one is not null, device is available
+            if(!status.getAttributes().isEmpty()) //if one is not null, device is available
                 return false;
         }
 
