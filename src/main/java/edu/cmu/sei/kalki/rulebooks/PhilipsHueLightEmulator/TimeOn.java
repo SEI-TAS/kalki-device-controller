@@ -24,6 +24,12 @@ public class TimeOn extends RulebookRule {
         // this status is ON && time last change > condition
         if(Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
             List<DeviceStatus> phleStatuses = Postgres.findDeviceStatusesOverTime(device.getId(), lastOffCondition, "minute");
+
+            long latestTimestamp = phleStatuses.get(phleStatuses.size()-1).getTimestamp().getTime();
+            long earliestTimestamp = phleStatuses.get(0).getTimestamp().getTime();
+            if(lessThanThreshold(latestTimestamp, earliestTimestamp, lastOffCondition)) //not enough statuses to trigger alert
+                return false;
+
             for(DeviceStatus s: phleStatuses) {
                 if(!Boolean.parseBoolean(s.getAttributes().get("isOn"))) //light was off in specified period
                     return false;
@@ -54,4 +60,12 @@ public class TimeOn extends RulebookRule {
         return false;
     }
 
+    private boolean lessThanThreshold(long timestampLatest, long timestampEarliest, int threshold) {
+        long diff = timestampLatest - timestampEarliest;
+        if(diff < (long) threshold) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
