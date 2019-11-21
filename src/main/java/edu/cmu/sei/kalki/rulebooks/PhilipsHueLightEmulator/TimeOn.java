@@ -19,7 +19,7 @@ public class TimeOn extends RulebookRule {
     public boolean conditionIsTrue(){
         setAlertCondition("phle-time-on");
         int lastOffCondition = Integer.parseInt(alertCondition.getVariables().get("time-last-change"));
-        alertInfo = "Light is on and motion has been detected within " + lastOffCondition +" minutes.";
+        alertInfo = "Light is on and motion hasn't been detected within " + lastOffCondition +" minutes.";
 
         // this status is ON && time last change > condition
         if(Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
@@ -27,12 +27,15 @@ public class TimeOn extends RulebookRule {
 
             long latestTimestamp = phleStatuses.get(phleStatuses.size()-1).getTimestamp().getTime();
             long earliestTimestamp = phleStatuses.get(0).getTimestamp().getTime();
-            if(lessThanThreshold(latestTimestamp, earliestTimestamp, lastOffCondition)) //not enough statuses to trigger alert
+            if(lessThanThreshold(latestTimestamp, earliestTimestamp, lastOffCondition)) { //not enough statuses to trigger alert
+                logger.info("[TimeOn] Difference in statuses is < threshold: "+((latestTimestamp-earliestTimestamp)/60000));
                 return false;
-
+            }
             for(DeviceStatus s: phleStatuses) {
-                if(!Boolean.parseBoolean(s.getAttributes().get("isOn"))) //light was off in specified period
+                if(!Boolean.parseBoolean(s.getAttributes().get("isOn"))) { //light was off in specified period
+                    logger.info("[TimeOn] Light was off in specified period");
                     return false;
+                }
             }
 
             List<Device> devicesInGroup = Postgres.findDevicesByGroup(device.getGroup().getId());
@@ -61,7 +64,7 @@ public class TimeOn extends RulebookRule {
     }
 
     private boolean lessThanThreshold(long timestampLatest, long timestampEarliest, int threshold) {
-        long diff = (timestampLatest - timestampEarliest) / (long)60000;
+        long diff = (timestampLatest - timestampEarliest) / 60000;
 
         if(diff < (long) threshold) {
             return true;
