@@ -61,7 +61,8 @@ public class TimeOn extends RulebookRule {
     }
 
     private boolean lessThanThreshold(long timestampLatest, long timestampEarliest, int threshold) {
-        long diff = timestampLatest - timestampEarliest;
+        long diff = (timestampLatest - timestampEarliest) / (long)60000;
+
         if(diff < (long) threshold) {
             return true;
         } else {
