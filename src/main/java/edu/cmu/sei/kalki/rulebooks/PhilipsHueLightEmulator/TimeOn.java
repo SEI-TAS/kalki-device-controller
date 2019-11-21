@@ -40,6 +40,11 @@ public class TimeOn extends RulebookRule {
                 }
             }
 
+            // no statuses, so no motion detected
+            if(dlinkStatuses.size() == 0) {
+                return true;
+            }
+
             // if it hasn't detected motion
             for (DeviceStatus ds: dlinkStatuses){
                 if (!Boolean.parseBoolean(ds.getAttributes().get("motion_detected")))
