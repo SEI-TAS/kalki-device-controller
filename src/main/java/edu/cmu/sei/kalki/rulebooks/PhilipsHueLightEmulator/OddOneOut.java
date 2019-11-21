@@ -29,6 +29,8 @@ public class OddOneOut extends RulebookRule {
                     break;
                 }
             }
+        } else {
+            conditionIsTrue = false;
         }
 
         return conditionIsTrue;
