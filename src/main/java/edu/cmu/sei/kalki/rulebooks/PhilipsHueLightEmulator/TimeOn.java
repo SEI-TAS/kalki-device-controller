@@ -28,7 +28,7 @@ public class TimeOn extends RulebookRule {
             long latestTimestamp = phleStatuses.get(phleStatuses.size()-1).getTimestamp().getTime();
             long earliestTimestamp = phleStatuses.get(0).getTimestamp().getTime();
             if(lessThanThreshold(latestTimestamp, earliestTimestamp, lastOffCondition)) { //not enough statuses to trigger alert
-                logger.info("[TimeOn] Difference in statuses is < threshold: "+((latestTimestamp-earliestTimestamp)/60000));
+                logger.info("[TimeOn] Difference in statuses is < threshold: "+((latestTimestamp-earliestTimestamp)));
                 return false;
             }
             for(DeviceStatus s: phleStatuses) {
@@ -64,9 +64,9 @@ public class TimeOn extends RulebookRule {
     }
 
     private boolean lessThanThreshold(long timestampLatest, long timestampEarliest, int threshold) {
-        long diff = (timestampLatest - timestampEarliest) / 60000;
+        double diff = (timestampLatest - timestampEarliest) / 60000;
 
-        if(diff < (long) threshold) {
+        if(diff < threshold) {
             return true;
         } else {
             return false;
