@@ -1,5 +1,7 @@
 package edu.cmu.sei.kalki.rulebooks.PhilipsHueLightEmulator;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
@@ -19,6 +21,9 @@ public class OddOneOut extends RulebookRule {
         // if this device is OFF
         if(!Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
             // get other devices of same type, check their status
+            Map<Device, DeviceStatus> statuses = device.statusesOfSameType();
+            if(statuses.size() == 1) //there is only this device
+                return false;
             for(Map.Entry<Device, DeviceStatus> entry: device.statusesOfSameType().entrySet()){
                 Device d = entry.getKey();
                 DeviceStatus s = entry.getValue();
