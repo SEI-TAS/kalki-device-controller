@@ -23,8 +23,9 @@ public class TimeOn extends RulebookRule {
 
         // this status is ON && time last change > condition
         if(Boolean.parseBoolean(status.getAttributes().get("isOn"))) {
-            List<DeviceStatus> phleStatuses = Postgres.findDeviceStatusesOverTime(device.getId(), lastOffCondition, "minute");
+            List<DeviceStatus> phleStatuses = Postgres.findDeviceStatusesOverTime(device.getId(), status.getTimestamp(), lastOffCondition, "minute");
 
+            logger.info("[TimeOn] Statuses returned: "+phleStatuses.size());
             long latestTimestamp = phleStatuses.get(phleStatuses.size()-1).getTimestamp().getTime();
             long earliestTimestamp = phleStatuses.get(0).getTimestamp().getTime();
             if(lessThanThreshold(latestTimestamp, earliestTimestamp, lastOffCondition)) { //not enough statuses to trigger alert
@@ -44,7 +45,7 @@ public class TimeOn extends RulebookRule {
             // find the dlink and get statuses for last T minutes
             for(Device d: devicesInGroup){
                 if(d.getType().getName().equals("DLink Camera")){
-                    dlinkStatuses = Postgres.findDeviceStatusesOverTime(d.getId(), lastOffCondition, "minute");
+                    dlinkStatuses = Postgres.findDeviceStatusesOverTime(d.getId(), status.getTimestamp(), lastOffCondition, "minute");
                     break;
                 }
             }
