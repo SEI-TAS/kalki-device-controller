@@ -14,19 +14,19 @@ public class DeviceUnavailable extends RulebookRule {
     public boolean conditionIsTrue() {
         setAlertCondition("device-unavailable");
 
-        List<DeviceStatus> deviceStatuses = Postgres.findSubsetNDeviceStatuses(device.getId(), 1, status.getId());
+        //get last 5 statuses
+        List<DeviceStatus> deviceStatuses = Postgres.findNDeviceStatuses(device.getId(), 5);
 
-        // if diff between timestamps is > 5*sampling rate
-        if(deviceStatuses.size() > 0){
-            long timestamp2 = status.getTimestamp().getTime();
-            long timestamp1 = deviceStatuses.get(0).getTimestamp().getTime();
-            if(Math.abs(timestamp2 - timestamp1) > 5*device.getSamplingRate()) {
-                alertInfo = "Timestamp difference: " + (Math.abs(timestamp2 - timestamp1));
-                return true;
-            }
+        // ensure there are at least 5 statuses
+        if(deviceStatuses.size() < 5)
+            return false;
 
+        //check that all 5 are null
+        for(DeviceStatus status: deviceStatuses){
+            if(!status.getAttributes().isEmpty()) //if one is not null, device is available
+                return false;
         }
 
-        return false;
+        return true;
     }
 }

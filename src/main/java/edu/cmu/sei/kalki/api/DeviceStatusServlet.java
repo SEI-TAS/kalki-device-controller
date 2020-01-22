@@ -37,7 +37,6 @@ public class DeviceStatusServlet extends DeviceControllerServlet {
         status.insert();
         logger.info("[DeviceStatusServlet] DeviceStatus inserted:"+status.toString());
 
-        AlertConditionTester.testDeviceStatus(status);
         response.setStatus(HttpStatus.OK_200);
     }
 

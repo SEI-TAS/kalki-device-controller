@@ -23,7 +23,7 @@ public class CurrentMwGreaterSuspicious extends RulebookRule {
         double threshold = Double.valueOf(alertCondition.getVariables().get("currentmw"));
         int duration = Integer.parseInt(alertCondition.getVariables().get("duration"));
 
-        List<DeviceStatus> statuses = Postgres.findDeviceStatusesOverTime(device.getId(), duration, "minute");
+        List<DeviceStatus> statuses = Postgres.findDeviceStatusesOverTime(device.getId(), status.getTimestamp(), duration, "minute");
         for(DeviceStatus s: statuses){
             double currentPower = Double.valueOf(s.getAttributes().get("currentpower"));
             if(currentPower < threshold) // a value was < alert condition in last X minutes, so not suspicious

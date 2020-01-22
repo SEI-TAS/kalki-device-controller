@@ -18,7 +18,8 @@ public class DatabaseListener {
         InsertListener.addHandler("deviceinsert", new DeviceHandler(apiUrl+"/new-device", true));
         InsertListener.addHandler("deviceupdate", new DeviceHandler(apiUrl+"/update-device", false));
         InsertListener.addHandler("devicesecuritystateinsert", new NewSecurityStateHandler(apiUrl));
-        logger.info("[DatabaseListener] Initialized 3 database listeners.");
+        InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
+        logger.info("[DatabaseListener] Initialized 4 database listeners.");
 
         // get devices already inserted in system
         List<Device> deviceList = Postgres.findAllDevices();
