@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.database;
 
+import edu.cmu.sei.kalki.IoTInterfaceAPI;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
 import edu.cmu.sei.ttg.kalki.models.Device;
@@ -16,9 +17,7 @@ import java.util.logging.Logger;
 
 public class NewSecurityStateHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
-    private String apiUrl;
-
-    public NewSecurityStateHandler(String endpoint) { apiUrl = endpoint+"/send-command"; }
+    private IoTInterfaceAPI iotInterface = new IoTInterfaceAPI();
 
     @Override
     public void handleNewInsertion(int newStateId) {
@@ -43,28 +42,8 @@ public class NewSecurityStateHandler implements InsertHandler {
     private void handleCommands(Device commandDevice, Device stateDevice, List<DeviceCommand> commands) {
         if(commands.size() < 1)
             return;
-        sendToIotInterface(commandDevice, commands);
+        iotInterface.sendCommands(commandDevice, commands);
         logSendCommandReact(stateDevice, commands.size());
-    }
-
-    private void sendToIotInterface(Device dev, List<DeviceCommand> comms) {
-        try {
-            URL url = new URL(apiUrl);
-            HttpURLConnection httpCon = (HttpURLConnection) url.openConnection();
-            httpCon.setDoOutput(true);
-            httpCon.setRequestMethod("POST");
-            OutputStreamWriter out = new OutputStreamWriter(httpCon.getOutputStream());
-
-            JSONObject json = new JSONObject();
-            json.put("command-list", comms);
-            json.put("device",new JSONObject(dev.toString()));
-            out.write(json.toString());
-            out.close();
-            httpCon.getInputStream();
-        } catch (Exception e) {
-            logger.severe("[NewSecurityStateHandler] Error sending device and commands to IoT Interface API: "+dev.toString());
-            logger.severe(e.getMessage());
-        }
     }
 
     private void logSendCommandReact(Device device, int numCommands) {

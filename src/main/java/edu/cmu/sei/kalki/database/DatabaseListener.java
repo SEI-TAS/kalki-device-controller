@@ -11,19 +11,19 @@ import java.util.logging.Logger;
 public class DatabaseListener {
     private Logger logger = Logger.getLogger("device-controller");
 
-    public void start(String apiUrl) {
+    public void start() {
         InsertListener.startListening();
         InsertListener.clearHandlers();
-        logger.info("[DatabaseListener] apiUrl: "+apiUrl);
-        InsertListener.addHandler("deviceinsert", new DeviceHandler(apiUrl+"/new-device", true));
-        InsertListener.addHandler("deviceupdate", new DeviceHandler(apiUrl+"/update-device", false));
-        InsertListener.addHandler("devicesecuritystateinsert", new NewSecurityStateHandler(apiUrl));
+        logger.info("[DatabaseListener] Starting");
+        InsertListener.addHandler("deviceinsert", new DeviceHandler(true));
+        InsertListener.addHandler("deviceupdate", new DeviceHandler(false));
+        InsertListener.addHandler("devicesecuritystateinsert", new NewSecurityStateHandler());
         InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
         logger.info("[DatabaseListener] Initialized 4 database listeners.");
 
         // get devices already inserted in system
         List<Device> deviceList = Postgres.findAllDevices();
-        DeviceHandler tempHandler = new DeviceHandler(apiUrl+"/new-device", true);
+        DeviceHandler tempHandler = new DeviceHandler(true);
         for (Device d: deviceList){
             tempHandler.handleNewInsertion(d.getId());
         }

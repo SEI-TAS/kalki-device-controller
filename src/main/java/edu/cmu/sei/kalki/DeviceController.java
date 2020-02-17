@@ -2,6 +2,7 @@ package edu.cmu.sei.kalki;
 
 import edu.cmu.sei.kalki.api.ApiServerStartup;
 import edu.cmu.sei.kalki.database.DatabaseListener;
+import edu.cmu.sei.kalki.utils.Config;
 import edu.cmu.sei.ttg.kalki.database.Postgres;
 
 import java.util.logging.Level;
@@ -12,19 +13,28 @@ public class DeviceController {
     private static Logger logger = Logger.getLogger("device-controller");
 
     public static void main(String[] args) {
-        Postgres.initialize("localhost", "5432", "kalkidb", "kalkiuser", "kalkipass");
-        Postgres.setLoggingLevel(Level.OFF);
+        try
+        {
+            Config.load("config.json");
 
-        String apiUrl = "10.27.153.2:5050";
-        try {
-            apiUrl = args[0];
-        } catch (ArrayIndexOutOfBoundsException e) { }
+            String dbHost = Config.data.get("db_host");
+            String dbPort = Config.data.get("db_port");
+            String dbName = Config.data.get("db_name");
+            String dbUser = Config.data.get("db_user");
+            String dbPass = Config.data.get("db_password");
+            Postgres.initialize(dbHost, dbPort, dbName, dbUser, dbPass);
+            Postgres.setLoggingLevel(Level.OFF);
 
-        DatabaseListener listener = new DatabaseListener();
-        listener.start("http://"+apiUrl+"/iot-interface-api");
-        logger.info("[DeviceController] Database listener started.");
+            DatabaseListener listener = new DatabaseListener();
+            listener.start();
+            logger.info("[DeviceController] Database listener started.");
 
-        ApiServerStartup.start();
-        logger.info("[DeviceController] ApiServerStartup started");
+            ApiServerStartup.start();
+            logger.info("[DeviceController] ApiServerStartup started");
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
     }
 }
