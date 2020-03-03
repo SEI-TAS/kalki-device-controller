@@ -7,7 +7,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'edu.cmu.sei.kalki.DeviceController'
+mainClassName = 'edu.cmu.sei.kalki.dc.DeviceController'
 sourceCompatibility = 1.8
 
 repositories {
