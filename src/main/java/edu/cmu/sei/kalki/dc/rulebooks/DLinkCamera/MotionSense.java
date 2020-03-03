@@ -1,7 +1,7 @@
 package edu.cmu.sei.kalki.dc.rulebooks.DLinkCamera;
 
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
-import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.models.Device;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.dc.rulebooks.RulebookRule;
 

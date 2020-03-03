@@ -1,10 +1,11 @@
 package edu.cmu.sei.kalki.dc.database;
 
+import edu.cmu.sei.kalki.db.daos.DeviceDAO;
 import edu.cmu.sei.kalki.dc.IoTInterfaceAPI;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertHandler;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.StageLog;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.listeners.InsertHandler;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.StageLog;
 
 import java.util.logging.Logger;
 
@@ -21,7 +22,7 @@ public class DeviceHandler implements InsertHandler {
     @Override
     public void handleNewInsertion(int newDeviceId) {
         logger.info("[DeviceHandler] Device found: "+newDeviceId+". Is it new? "+ isNewDevice);
-        Device device = Postgres.findDevice(newDeviceId);
+        Device device = DeviceDAO.findDevice(newDeviceId);
         logSampleRateIncreaseReact(device);
         if(isNewDevice) {
             iotInterface.sendNewDeviceInfo(device);

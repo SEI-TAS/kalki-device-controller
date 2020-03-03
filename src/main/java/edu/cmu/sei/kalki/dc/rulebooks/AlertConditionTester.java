@@ -1,9 +1,11 @@
 package edu.cmu.sei.kalki.dc.rulebooks;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.AlertCondition;
-import edu.cmu.sei.ttg.kalki.models.Device;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.daos.AlertConditionDAO;
+import edu.cmu.sei.kalki.db.daos.DeviceDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.models.AlertCondition;
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -17,8 +19,8 @@ public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
 
     public static void testDeviceStatus(DeviceStatus status){
-        Device device = Postgres.findDevice(status.getDeviceId());
-        List<AlertCondition> alertConditionList = Postgres.findAlertConditionsByDevice(status.getDeviceId());
+        Device device = DeviceDAO.findDevice(status.getDeviceId());
+        List<AlertCondition> alertConditionList = AlertConditionDAO.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
         RuleBookRunner deviceSpecific = prepareRulebook(device.getType().getName());
         RuleBookRunner allDevices = prepareRulebook("AllDevices");

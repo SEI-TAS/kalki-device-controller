@@ -1,9 +1,10 @@
 package edu.cmu.sei.kalki.dc.rulebooks.AllDevices;
 
 import com.deliveredtechnologies.rulebook.annotation.*;
+import edu.cmu.sei.kalki.db.daos.DeviceStatusDAO;
 import edu.cmu.sei.kalki.dc.rulebooks.RulebookRule;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class DeviceUnavailable extends RulebookRule {
         setAlertCondition("device-unavailable");
 
         //get last 5 statuses
-        List<DeviceStatus> deviceStatuses = Postgres.findNDeviceStatuses(device.getId(), 5);
+        List<DeviceStatus> deviceStatuses = DeviceStatusDAO.findNDeviceStatuses(device.getId(), 5);
 
         // ensure there are at least 5 statuses
         if(deviceStatuses.size() < 5)

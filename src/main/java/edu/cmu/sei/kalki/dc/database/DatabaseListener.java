@@ -1,8 +1,9 @@
 package edu.cmu.sei.kalki.dc.database;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.listeners.InsertListener;
-import edu.cmu.sei.ttg.kalki.models.Device;
+import edu.cmu.sei.kalki.db.daos.DeviceDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.listeners.InsertListener;
+import edu.cmu.sei.kalki.db.models.Device;
 
 import java.util.List;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class DatabaseListener {
         logger.info("[DatabaseListener] Initialized 4 database listeners.");
 
         // get devices already inserted in system
-        List<Device> deviceList = Postgres.findAllDevices();
+        List<Device> deviceList = DeviceDAO.findAllDevices();
         DeviceHandler tempHandler = new DeviceHandler(true);
         for (Device d: deviceList){
             tempHandler.handleNewInsertion(d.getId());

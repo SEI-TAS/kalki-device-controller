@@ -1,7 +1,8 @@
 package edu.cmu.sei.kalki.dc.rulebooks.UdooNeo;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.daos.DeviceStatusDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 import com.deliveredtechnologies.rulebook.annotation.*;
 import edu.cmu.sei.kalki.dc.rulebooks.RulebookRule;
 
@@ -22,7 +23,7 @@ public class TemperatureAverage extends RulebookRule {
         double temp = Double.valueOf(status.getAttributes().get("temp_input"));
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
 
-        List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(device.getId(), numStatuses);
+        List<DeviceStatus> lastNStatuses = DeviceStatusDAO.findNDeviceStatuses(device.getId(), numStatuses);
         double avg = calculateAverage(lastNStatuses);
 
         if(temp > (avg + 2)){
