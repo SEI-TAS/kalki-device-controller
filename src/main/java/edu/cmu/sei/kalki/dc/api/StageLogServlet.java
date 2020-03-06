@@ -14,7 +14,7 @@ public class StageLogServlet extends DeviceControllerServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        logger.info("[StageLogServlet] Request received at /iot-interface-api/new-stage-log/");
+        logger.info("[StageLogServlet] Request received at /device-controller-api/new-stage-log");
 
         // read body of request
         JSONObject requestBody = parseRequestBody(request, response);
