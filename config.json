@@ -6,4 +6,6 @@
   "db_name": "kalkidb",
   "db_user": "kalkiuser",
   "db_password": "kalkipass",
+
+  "test_api": "http://10.64.201.16:9090/device-controller-api"
 }

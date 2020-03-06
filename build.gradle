@@ -29,6 +29,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    dependsOn 'cleanTest'
+    testLogging {
+        events "passed", "skipped", "failed", "standard_out"
+        exceptionFormat 'full'
+        showCauses true
+        showExceptions true
+        showStackTraces true
+    }
 }
 
 
