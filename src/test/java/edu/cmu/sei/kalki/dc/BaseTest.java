@@ -5,7 +5,6 @@ import edu.cmu.sei.kalki.db.utils.Config;
 import edu.cmu.sei.kalki.db.utils.TestDB;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.io.IOException;
@@ -13,28 +12,22 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 public abstract class BaseTest {
-//
-//    @BeforeAll
-//    public static void getConfig() {
-//        try {
-//            Config.load("config.json");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.exit(-1);
-//        }
-//    }
 
     @BeforeEach
-    public void resetDB() {
+    public void setup() {
         try{
             Postgres.setLoggingLevel(Level.SEVERE);
 
             TestDB.recreateTestDB();
             TestDB.initialize();
+
+            Config.load("config.json");
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
-//        DeviceController.main(null);
+
         insertData();
     }
 

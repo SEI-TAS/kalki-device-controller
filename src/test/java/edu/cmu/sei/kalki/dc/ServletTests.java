@@ -3,7 +3,6 @@ package edu.cmu.sei.kalki.dc;
 import edu.cmu.sei.kalki.db.daos.DeviceStatusDAO;
 import edu.cmu.sei.kalki.db.daos.StageLogDAO;
 import edu.cmu.sei.kalki.db.models.*;
-import edu.cmu.sei.kalki.db.utils.Config;
 import edu.cmu.sei.kalki.dc.api.ApiServerStartup;
 import org.json.JSONObject;
 
@@ -17,7 +16,6 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class ServletTests extends BaseTest {
     private final String apiUrl = "http://0.0.0.0:9090/device-controller-api";

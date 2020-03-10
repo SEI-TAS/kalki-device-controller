@@ -2,7 +2,6 @@ package edu.cmu.sei.kalki.dc.database;
 
 import edu.cmu.sei.kalki.db.daos.DeviceDAO;
 import edu.cmu.sei.kalki.dc.IoTInterfaceAPI;
-import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.listeners.InsertHandler;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.StageLog;
@@ -15,7 +14,7 @@ public class DeviceHandler implements InsertHandler {
 
     private boolean isNewDevice;
 
-    DeviceHandler(boolean isNewDev) {
+    public DeviceHandler(boolean isNewDev) {
         isNewDevice = isNewDev;
     }
 
