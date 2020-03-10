@@ -10,7 +10,7 @@ import edu.cmu.sei.kalki.db.listeners.InsertHandler;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class NewPolicyRuleLogHandler implements InsertHandler {
+public class PolicyRuleLogHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
     private IoTInterfaceAPI iotInterface = new IoTInterfaceAPI();
 

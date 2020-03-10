@@ -16,7 +16,7 @@ public class DatabaseListener {
         logger.info("[DatabaseListener] Starting");
         InsertListener.addHandler("deviceinsert", new DeviceHandler(true));
         InsertListener.addHandler("deviceupdate", new DeviceHandler(false));
-        InsertListener.addHandler("policyruleloginsert", new NewPolicyRuleLogHandler());
+        InsertListener.addHandler("policyruleloginsert", new PolicyRuleLogHandler());
         InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
         logger.info("[DatabaseListener] Initialized 4 database listeners.");
 
