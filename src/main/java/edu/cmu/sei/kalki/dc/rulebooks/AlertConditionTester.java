@@ -18,7 +18,9 @@ import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
 public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
 
-    public static void testDeviceStatus(DeviceStatus status){
+    public AlertConditionTester(){}
+
+    public void testDeviceStatus(DeviceStatus status){
         Device device = DeviceDAO.findDevice(status.getDeviceId());
         List<AlertCondition> alertConditionList = AlertConditionDAO.findAlertConditionsByDevice(status.getDeviceId());
         NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
@@ -31,7 +33,7 @@ public class AlertConditionTester {
     }
 
 
-    private static NameValueReferableMap prepareFactMap(Device device, DeviceStatus status, List<AlertCondition> alertConditionList) {
+    private NameValueReferableMap prepareFactMap(Device device, DeviceStatus status, List<AlertCondition> alertConditionList) {
         NameValueReferableMap facts = new FactMap();
         facts.setValue("device", device);
         facts.setValue("status", status);
@@ -39,7 +41,7 @@ public class AlertConditionTester {
         return facts;
     }
 
-    private static RuleBookRunner prepareRulebook(String deviceType) {
+    private RuleBookRunner prepareRulebook(String deviceType) {
         RuleBookRunner ruleBookRunner = null;
         deviceType = deviceType.replaceAll("\\s","");
         logger.info("[AlertConditionTester] "+deviceType+" rulebook selected");

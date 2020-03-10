@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 public class DeviceStatusHandler implements InsertHandler {
     private Logger logger = Logger.getLogger("device-controller");
+    private AlertConditionTester alertConditionTester = new AlertConditionTester();
 
     public DeviceStatusHandler() {}
 
@@ -17,6 +18,7 @@ public class DeviceStatusHandler implements InsertHandler {
     public void handleNewInsertion(int newStatusId) {
         logger.info("[DeviceStatusHandler] Received new device status.");
         DeviceStatus status = DeviceStatusDAO.findDeviceStatus(newStatusId);
-        AlertConditionTester.testDeviceStatus(status);
+
+        alertConditionTester.testDeviceStatus(status);
     }
 }
