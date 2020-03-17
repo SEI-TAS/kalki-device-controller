@@ -1,7 +1,8 @@
 package edu.cmu.sei.kalki.dc.rulebooks;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.kalki.db.daos.AlertTypeLookupDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
+import edu.cmu.sei.kalki.db.models.*;
 
 import com.deliveredtechnologies.rulebook.RuleState;
 import com.deliveredtechnologies.rulebook.annotation.*;
@@ -42,7 +43,7 @@ public abstract class RulebookRule {
 	@Then
 	public void then(){
 		logger.info("[RulebookRule] Alert triggered: "+alertCondition.getAlertTypeName()+" for status: "+status.getId());
-		AlertTypeLookup atl = Postgres.findAlertTypeLookup(alertCondition.getAlertTypeLookupId());
+		AlertTypeLookup atl = AlertTypeLookupDAO.findAlertTypeLookup(alertCondition.getAlertTypeLookupId());
 		Alert alert = new Alert(alertCondition.getAlertTypeName(), status.getId(), atl.getAlertTypeId(), alertInfo);
 		alert.insert();
 	}

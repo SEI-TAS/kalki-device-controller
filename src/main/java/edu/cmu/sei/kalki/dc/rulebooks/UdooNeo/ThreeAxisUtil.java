@@ -1,8 +1,8 @@
 package edu.cmu.sei.kalki.dc.rulebooks.UdooNeo;
 
-import edu.cmu.sei.ttg.kalki.database.Postgres;
-import edu.cmu.sei.ttg.kalki.models.AlertCondition;
-import edu.cmu.sei.ttg.kalki.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.daos.DeviceStatusDAO;
+import edu.cmu.sei.kalki.db.models.AlertCondition;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ public class ThreeAxisUtil {
 
     public static ThreeAxisResult checkAgainstAverages(AlertCondition alertCondition, int deviceId, String sensor) {
         int numStatuses = Integer.valueOf(alertCondition.getVariables().get("average"));
-        List<DeviceStatus> lastNStatuses = Postgres.findNDeviceStatuses(deviceId, numStatuses);
+        List<DeviceStatus> lastNStatuses = DeviceStatusDAO.findNDeviceStatuses(deviceId, numStatuses);
 
         HashMap<String, Double> averages = calculateAverages(lastNStatuses, sensor);
 

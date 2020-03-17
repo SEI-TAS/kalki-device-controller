@@ -1,6 +1,6 @@
 package edu.cmu.sei.kalki.dc.api;
 
-import edu.cmu.sei.ttg.kalki.models.*;
+import edu.cmu.sei.kalki.db.models.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +19,7 @@ public class DeviceStatusServlet extends DeviceControllerServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
-        logger.info("[DeviceStatusServlet] Request received at /iot-interface-api/new-status/");
+        logger.info("[DeviceStatusServlet] Request received at /device-controller-api/new-status");
 
         // read body of request
         JSONObject requestBody = parseRequestBody(request, response);

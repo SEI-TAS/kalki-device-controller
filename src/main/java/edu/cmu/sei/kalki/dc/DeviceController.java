@@ -3,7 +3,7 @@ package edu.cmu.sei.kalki.dc;
 import edu.cmu.sei.kalki.dc.api.ApiServerStartup;
 import edu.cmu.sei.kalki.dc.database.DatabaseListener;
 import edu.cmu.sei.kalki.dc.utils.Config;
-import edu.cmu.sei.ttg.kalki.database.Postgres;
+import edu.cmu.sei.kalki.db.database.Postgres;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
