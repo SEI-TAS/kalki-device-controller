@@ -1,6 +1,7 @@
 package edu.cmu.sei.kalki.dc;
 
 import edu.cmu.sei.kalki.db.daos.StageLogDAO;
+import edu.cmu.sei.kalki.db.models.DataNode;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceType;
 import edu.cmu.sei.kalki.db.models.StageLog;
@@ -69,7 +70,10 @@ public class DeviceHandlerTests extends BaseTest{
         DeviceType type = new DeviceType(-1, "name");
         type.insert();
 
-        testDevice = new Device("1", "1", type, "ip", 1,1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+
+        testDevice = new Device("1", "1", type, "ip", 1,1, dataNode);
         testDevice.insert();
     }
 }

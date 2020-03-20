@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.dc;
 
+import edu.cmu.sei.kalki.db.models.DataNode;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceStatus;
 import edu.cmu.sei.kalki.db.models.DeviceType;
@@ -43,7 +44,9 @@ public class DeviceStatusHandlerTests extends BaseTest {
         DeviceType type = new DeviceType(-1, "name");
         type.insert();
 
-        Device device = new Device("name", "description", type, "ip", 1,1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+        Device device = new Device("name", "description", type, "ip", 1,1, dataNode);
         device.insert();
 
         deviceStatus = new DeviceStatus(device.getId(), new HashMap<>());

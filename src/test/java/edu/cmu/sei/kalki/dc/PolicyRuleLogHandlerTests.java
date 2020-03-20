@@ -66,7 +66,9 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
         testDevice.setGroupId(g);
         testDevice.insertOrUpdate();
 
-        Device devicetwo = new Device("device two", "second test", type.getId(), g.getId(), "ip", 1,1,1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+        Device devicetwo = new Device("device two", "second test", type.getId(), g.getId(), "ip", 1,1,1, dataNode.getId());
         devicetwo.insertOrUpdate();
 
         DeviceCommand command = new DeviceCommand("One command", type.getId());
@@ -86,7 +88,10 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
 
     @Test
     public void handleNewInsertionGroupNoCommand() {
-        Device devicetwo = new Device("device two", "second test", type, "ip", 1,1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+
+        Device devicetwo = new Device("device two", "second test", type, "ip", 1,1, dataNode);
         devicetwo.insertOrUpdate();
 
         policyRuleLog = new PolicyRuleLog(policyRule.getId(), testDevice.getId());
@@ -101,7 +106,9 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
         type = new DeviceType(-1, "Device Type");
         type.insert();
 
-        testDevice = new Device("Name", "Description", type, "ip", 1,1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+        testDevice = new Device("Name", "Description", type, "ip", 1,1, dataNode);
         testDevice.insert();
 
         AlertType alertType = new AlertType("alert type", "a test type", "TEST");

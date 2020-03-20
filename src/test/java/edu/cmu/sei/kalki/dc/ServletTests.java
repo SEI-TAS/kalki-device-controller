@@ -91,7 +91,10 @@ public class ServletTests extends BaseTest {
         DeviceType type = new DeviceType(-1, "Description");
         type.insert();
 
-        Device device = new Device("Hi", "desc", type, "ip", 1, 1);
+        DataNode dataNode = new DataNode("Test Node", "localhost");
+        dataNode.insert();
+
+        Device device = new Device("Hi", "desc", type, "ip", 1, 1, dataNode);
         device.insert();
 
         deviceSecurityState = device.getCurrentState();

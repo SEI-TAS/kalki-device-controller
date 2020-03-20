@@ -96,7 +96,7 @@ public class IoTInterfaceAPI
      * @return
      */
     private boolean sendToIotInterface(Device dev, String endpoint, JSONObject payload) {
-        String fullUrlString = getBaseURL(Config.data.get("data_node_ip")) + endpoint;
+        String fullUrlString = getBaseURL(dev.getDataNode().getIpAddress()) + endpoint;
 
         try {
             URL fullUrl = new URL(fullUrlString);
