@@ -1,7 +1,8 @@
 version: '2'
 services:
-  kalki-main-controller:
+  kalki-device-controller:
     image: kalki/kalki-device-controller
+    container_name: kalki-device-controller
     network_mode: "host"
     environment:
       - TZ=${HOST_TZ}
