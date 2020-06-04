@@ -1,0 +1,9 @@
+version: '2.3'
+services:
+  kalki-device-controller:
+    image: kalki/kalki-device-controller
+    container_name: kalki-device-controller
+    network_mode: "host"
+    environment:
+      - TZ=${HOST_TZ}
+    command: ${CMD_PARAMS}
