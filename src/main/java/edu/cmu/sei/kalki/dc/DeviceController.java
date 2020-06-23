@@ -1,9 +1,9 @@
 package edu.cmu.sei.kalki.dc;
 
+import edu.cmu.sei.kalki.db.utils.Config;
 import edu.cmu.sei.kalki.db.utils.LoggerSetup;
 import edu.cmu.sei.kalki.dc.api.ApiServerStartup;
 import edu.cmu.sei.kalki.dc.database.DatabaseListener;
-import edu.cmu.sei.kalki.dc.utils.Config;
 import edu.cmu.sei.kalki.db.database.Postgres;
 
 import java.util.logging.Level;
@@ -19,12 +19,7 @@ public class DeviceController {
             Config.load("config.json");
             LoggerSetup.setup();
 
-            String dbHost = Config.data.get("db_host");
-            String dbPort = Config.data.get("db_port");
-            String dbName = Config.data.get("db_name");
-            String dbUser = Config.data.get("db_user");
-            String dbPass = Config.data.get("db_password");
-            Postgres.initialize(dbHost, dbPort, dbName, dbUser, dbPass);
+            Postgres.initializeFromConfig();
             Postgres.setLoggingLevel(Level.OFF);
 
             DatabaseListener listener = new DatabaseListener();

@@ -1,6 +1,5 @@
 package edu.cmu.sei.kalki.dc;
 
-import edu.cmu.sei.kalki.dc.utils.Config;
 import edu.cmu.sei.kalki.db.models.Device;
 import edu.cmu.sei.kalki.db.models.DeviceCommand;
 import org.json.JSONObject;
