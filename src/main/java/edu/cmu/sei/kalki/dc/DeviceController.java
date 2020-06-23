@@ -1,5 +1,6 @@
 package edu.cmu.sei.kalki.dc;
 
+import edu.cmu.sei.kalki.db.utils.LoggerSetup;
 import edu.cmu.sei.kalki.dc.api.ApiServerStartup;
 import edu.cmu.sei.kalki.dc.database.DatabaseListener;
 import edu.cmu.sei.kalki.dc.utils.Config;
@@ -16,6 +17,7 @@ public class DeviceController {
         try
         {
             Config.load("config.json");
+            LoggerSetup.setup();
 
             String dbHost = Config.data.get("db_host");
             String dbPort = Config.data.get("db_port");
