@@ -32,7 +32,7 @@
 package edu.cmu.sei.kalki.dc;
 
 import edu.cmu.sei.kalki.db.utils.Config;
-import edu.cmu.sei.kalki.db.utils.LoggerSetup;
+//import edu.cmu.sei.kalki.db.utils.LoggerSetup;
 import edu.cmu.sei.kalki.dc.api.ApiServerStartup;
 import edu.cmu.sei.kalki.dc.database.DatabaseListener;
 import edu.cmu.sei.kalki.db.database.Postgres;
@@ -48,7 +48,7 @@ public class DeviceController {
         try
         {
             Config.load("config.json");
-            LoggerSetup.setup();
+//            LoggerSetup.setup();
 
             Postgres.initializeFromConfig();
             Postgres.setLoggingLevel(Level.OFF);

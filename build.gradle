@@ -13,9 +13,9 @@ repositories {
 }
 
 dependencies {
-    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '1.6.0'
+    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '1.4.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
-    compile 'com.deliveredtechnologies:rulebook-core:0.8'
+    compile 'com.deliveredtechnologies:rulebook-core:0.10'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'org.eclipse.jetty', name: 'jetty-servlet', version: '9.4.19.v20190610'
     compile 'org.json:json:20171018'
