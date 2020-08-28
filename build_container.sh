@@ -5,4 +5,4 @@ if [ "$1" == "--skip_tests" ]; then
   SKIP_TESTS_ARG=" -x test "
 fi
 
-docker build --network=host SKIP_TESTS=${SKIP_TESTS_ARG} -t kalki/kalki-device-controller .
+docker build --network=host --build-arg SKIP_TESTS="${SKIP_TESTS_ARG}" -t kalki/kalki-device-controller .
