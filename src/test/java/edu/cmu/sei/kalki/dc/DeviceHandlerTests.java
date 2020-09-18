@@ -104,7 +104,7 @@ public class DeviceHandlerTests extends BaseTest{
         DataNode dataNode = new DataNode("Test Node", "localhost");
         dataNode.insert();
 
-        testDevice = new Device("1", "1", type, "ip", 1,1, dataNode);
+        testDevice = new Device("1", "1", type, "ip", 1,1, dataNode, "");
         testDevice.insert();
     }
 }
