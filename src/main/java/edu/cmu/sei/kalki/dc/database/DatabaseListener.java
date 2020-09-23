@@ -36,26 +36,37 @@ import edu.cmu.sei.kalki.db.listeners.InsertListener;
 import edu.cmu.sei.kalki.db.models.Device;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class DatabaseListener {
+    private static final String LOG_ID = "[DatabaseListener] ";
     private Logger logger = Logger.getLogger("device-controller");
 
     public void start() {
-        InsertListener.startListening();
+        logger.info(LOG_ID + "Starting");
+
+        // Adding small delay in case someone is inserting devices at startup.
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) { }
+
+        // get devices already inserted in system
+        logger.info(LOG_ID + "Sending info about existing devices");
+        List<Device> deviceList = DeviceDAO.findAllDevices();
+        DeviceHandler tempHandler = new DeviceHandler(true);
+        for (Device d: deviceList){
+            logger.info(LOG_ID + "Found existing device.");
+            tempHandler.handleNewInsertion(d.getId());
+        }
+
+        logger.info( LOG_ID + "Initializing insert listeners");
         InsertListener.clearHandlers();
-        logger.info("[DatabaseListener] Starting");
+        InsertListener.startListening();
         InsertListener.addHandler("deviceinsert", new DeviceHandler(true));
         InsertListener.addHandler("deviceupdate", new DeviceHandler(false));
         InsertListener.addHandler("policyruleloginsert", new PolicyRuleLogHandler());
         InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
-        logger.info("[DatabaseListener] Initialized 4 database listeners.");
-
-        // get devices already inserted in system
-        List<Device> deviceList = DeviceDAO.findAllDevices();
-        DeviceHandler tempHandler = new DeviceHandler(true);
-        for (Device d: deviceList){
-            tempHandler.handleNewInsertion(d.getId());
-        }
+        logger.info(LOG_ID + "Initialized 4 database listeners.");
     }
 }
