@@ -90,8 +90,9 @@ public class IoTInterfaceAPI
      * @param endpoint
      */
     private void sendDeviceInfo(Device dev, String endpoint) {
+        logger.info("Sending device info to IoTInterface: " + dev.toString());
+        JSONObject json = new JSONObject(dev.toString());
         for(int i=0; i<ATTEMPTS; i++){
-            JSONObject json = new JSONObject(dev.toString());
             if(this.sendToIotInterface(dev, endpoint, json)) {
                 break;
             }
@@ -129,6 +130,7 @@ public class IoTInterfaceAPI
         String fullUrlString = getBaseURL(dev.getDataNode().getIpAddress()) + endpoint;
 
         try {
+            logger.info(LOG_ID + " Sending to " + fullUrlString + ": " + payload.toString());
             URL fullUrl = new URL(fullUrlString);
             HttpURLConnection httpCon = (HttpURLConnection) fullUrl.openConnection();
             httpCon.setDoOutput(true);
