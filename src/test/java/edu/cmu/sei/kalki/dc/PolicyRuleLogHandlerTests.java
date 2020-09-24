@@ -99,7 +99,7 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
 
         DataNode dataNode = new DataNode("Test Node", "localhost");
         dataNode.insert();
-        Device devicetwo = new Device("device two", "second test", type.getId(), g.getId(), "ip", 1,1,1, dataNode.getId());
+        Device devicetwo = new Device("device two", "second test", type.getId(), g.getId(), "ip", 1,1,1, dataNode.getId(), "");
         devicetwo.insertOrUpdate();
 
         DeviceCommand command = new DeviceCommand("One command", type.getId());
@@ -122,7 +122,7 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
         DataNode dataNode = new DataNode("Test Node", "localhost");
         dataNode.insert();
 
-        Device devicetwo = new Device("device two", "second test", type, "ip", 1,1, dataNode);
+        Device devicetwo = new Device("device two", "second test", type, "ip", 1,1, dataNode, "");
         devicetwo.insertOrUpdate();
 
         policyRuleLog = new PolicyRuleLog(policyRule.getId(), testDevice.getId());
@@ -139,7 +139,7 @@ public class PolicyRuleLogHandlerTests extends BaseTest {
 
         DataNode dataNode = new DataNode("Test Node", "localhost");
         dataNode.insert();
-        testDevice = new Device("Name", "Description", type, "ip", 1,1, dataNode);
+        testDevice = new Device("Name", "Description", type, "ip", 1,1, dataNode, "");
         testDevice.insert();
 
         AlertType alertType = new AlertType("alert type", "a test type", "TEST");

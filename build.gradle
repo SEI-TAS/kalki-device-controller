@@ -2,7 +2,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 
 group 'edu.cmu.sei.ttg.kalki'
-version '1.6.0'
+version '1.7.0'
 
 mainClassName = 'edu.cmu.sei.kalki.dc.DeviceController'
 sourceCompatibility = 1.8
@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '1.4.0'
+    compile group: 'edu.cmu.sei.ttg', name: 'kalki-db', version: '1.7.0'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.2'
     compile 'com.deliveredtechnologies:rulebook-core:0.10'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
