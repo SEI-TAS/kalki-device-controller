@@ -32,6 +32,7 @@
 package edu.cmu.sei.kalki.dc.database;
 
 import edu.cmu.sei.kalki.db.daos.DeviceDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.listeners.InsertListener;
 import edu.cmu.sei.kalki.db.models.Device;
 
@@ -63,10 +64,10 @@ public class DatabaseListener {
         logger.info( LOG_ID + "Initializing insert listeners");
         InsertListener.clearHandlers();
         InsertListener.startListening();
-        InsertListener.addHandler("deviceinsert", new DeviceHandler(true));
-        InsertListener.addHandler("deviceupdate", new DeviceHandler(false));
-        InsertListener.addHandler("policyruleloginsert", new PolicyRuleLogHandler());
-        InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_DEVICE, new DeviceHandler(true));
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_UPDATE_DEVICE, new DeviceHandler(false));
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_POLICY_INSTANCE, new PolicyRuleLogHandler());
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_DEV_STATUS,  new DeviceStatusHandler());
         logger.info(LOG_ID + "Initialized 4 database listeners.");
     }
 }
