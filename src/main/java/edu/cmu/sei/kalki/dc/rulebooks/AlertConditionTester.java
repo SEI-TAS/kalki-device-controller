@@ -62,7 +62,7 @@ public class AlertConditionTester {
     public void testDeviceStatus(DeviceStatus status){
         Device device = DeviceDAO.findDevice(status.getDeviceId());
         List<AlertContext> alertContexts = AlertContextDAO.findAlertContextsByDevice(status.getDeviceId());
-
+        System.out.println(device.getId());
         List<RuleBook> ruleBookRunnerList = rulebooks.get(device.getId());
         NameValueReferableMap factMap = prepareFactMap(device, status);
 
@@ -143,7 +143,7 @@ public class AlertConditionTester {
                     List<DeviceStatus> statusList = new ArrayList<>();
 
                     DeviceStatus status = input.getStatus();
-                    int condDeviceId = alertCondition.getDeviceId();
+                    int condDeviceId = alertCondition.getDeviceId(); // THIS SHOULD BE alertCondition.thresholdId;
                     if (status.getDeviceId() != condDeviceId) { // condition referrs to another device
                         statusList = DeviceStatusDAO.findNDeviceStatuses(condDeviceId, numStatuses);
                     } else {
