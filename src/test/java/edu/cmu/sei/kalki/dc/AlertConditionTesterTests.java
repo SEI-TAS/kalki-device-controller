@@ -48,6 +48,8 @@ public class AlertConditionTesterTests extends BaseTest {
 
     private AlertConditionTester alertConditionTester;
 
+    private DeviceType deviceType;
+    private DataNode dataNode;
     private Device device;
     private DeviceSensor deviceSensor;
     private AlertType alertType;
@@ -252,6 +254,135 @@ public class AlertConditionTesterTests extends BaseTest {
         assertEquals(1, alertList.size());
     }
 
+    @Test
+    public void testTestDeviceStatusSumEqualNoAlert() {
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.SUM, device.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("0");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(0, alertList.size());
+    }
+
+    @Test
+    public void testTestDeviceStatusSumEqualAlert() {
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.SUM, device.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("1");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(0, alertList.size());
+    }
+
+    @Test
+    public void testTestDeviceStatusAverageEqualNoAlert() {
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.AVERAGE, device.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("0");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(0, alertList.size());
+    }
+
+    @Test
+    public void testTestDeviceStatusAverageEqualAlert() {
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.AVERAGE, device.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("1");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(0, alertList.size());
+    }
+
+    @Test
+    public void testTestDeviceStatusTwoDevicesEqualsNoAlert() {
+        Device deviceTwo = new Device("Test device 2", "test description 2", deviceType, "1.1.1.2", 1000, 5000, dataNode, "");
+        deviceTwo.insert();
+
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.NONE, deviceTwo.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus status = new DeviceStatus(deviceTwo.getId());
+        status.addAttribute(deviceSensor.getName(), "0");
+        status.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("0");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(0, alertList.size());
+    }
+
+    @Test
+    public void testTestDeviceStatusTwoDevicesEqualsAlert() {
+        Device deviceTwo = new Device("Test device 2", "test description 2", deviceType, "1.1.1.2", 1000, 5000, dataNode, "");
+        deviceTwo.insert();
+
+        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.NONE, deviceTwo.getId(), "1");
+        alertCondition.insert();
+
+        AlertContext alertContext = new AlertContext(device.getId(), device.getName(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
+        alertContext.addCondition(alertCondition);
+        alertContext.insert();
+
+        DeviceStatus status = new DeviceStatus(deviceTwo.getId());
+        status.addAttribute(deviceSensor.getName(), "0");
+        status.insert();
+
+        DeviceStatus deviceStatus = genDeviceStatus("1");
+        sleep(500);
+
+        alertConditionTester.testDeviceStatus(deviceStatus);
+
+        List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
+
+        assertEquals(1, alertList.size());
+    }
+
+
     public static void sleep(int amt){
         try {
             TimeUnit.MILLISECONDS.sleep(amt);
@@ -268,19 +399,18 @@ public class AlertConditionTesterTests extends BaseTest {
     public void insertData() {
         alertConditionTester = new AlertConditionTester();
 
-        DeviceType deviceType = new DeviceType("Test type");
+        deviceType = new DeviceType("Test type");
         deviceType.insert();
-        System.out.println(deviceType.toString());
 
-        deviceSensor = new DeviceSensor("Test Sensor", deviceType.getId());
+        deviceSensor = new DeviceSensor("TestSensor", deviceType.getId());
         deviceSensor.insert();
 
-        DataNode dataNode = new DataNode("Test data node", "1.1.1.1");
+        dataNode = new DataNode("Test data node", "1.1.1.1");
         dataNode.insert();
 
         device = new Device("Test device", "test description", deviceType, "1.1.1.2", 1000, 5000, dataNode, "");
         device.insert();
-        System.out.println(device.toString());
+
         alertType = new AlertType("Test Alert Type", "test alert description", "device controller test");
         alertType.insert();
 

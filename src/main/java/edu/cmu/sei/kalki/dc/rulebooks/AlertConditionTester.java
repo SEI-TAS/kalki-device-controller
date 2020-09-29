@@ -143,7 +143,7 @@ public class AlertConditionTester {
                     List<DeviceStatus> statusList = new ArrayList<>();
 
                     DeviceStatus status = input.getStatus();
-                    int condDeviceId = alertCondition.getDeviceId(); // THIS SHOULD BE alertCondition.thresholdId;
+                    int condDeviceId = alertCondition.getThresholdId();
                     if (status.getDeviceId() != condDeviceId) { // condition referrs to another device
                         statusList = DeviceStatusDAO.findNDeviceStatuses(condDeviceId, numStatuses);
                     } else {
