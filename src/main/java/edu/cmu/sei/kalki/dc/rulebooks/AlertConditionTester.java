@@ -62,7 +62,7 @@ public class AlertConditionTester {
     public void testDeviceStatus(DeviceStatus status){
         Device device = DeviceDAO.findDevice(status.getDeviceId());
         List<AlertContext> alertContexts = AlertContextDAO.findAlertContextsByDevice(status.getDeviceId());
-        System.out.println(device.getId());
+
         List<RuleBook> ruleBookRunnerList = rulebooks.get(device.getId());
         NameValueReferableMap factMap = prepareFactMap(device, status);
 
@@ -159,11 +159,13 @@ public class AlertConditionTester {
 
                     String currentValue = "";
                     if (calculation.equals(AlertCondition.Calculation.AVERAGE.convert())) {
+                        System.out.println("AVERAGE");
                         int sum = calcSum(statusList, attribute);
                         int avg = sum / numStatuses;
                         currentValue = String.valueOf(avg);
                     }
                     else if (calculation.equals(AlertCondition.Calculation.SUM.convert())) {
+                        System.out.println("SUM");
                         int sum = calcSum(statusList, attribute);
                         currentValue = String.valueOf(sum);
                     }

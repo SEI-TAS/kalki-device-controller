@@ -33,6 +33,7 @@ test {
         showCauses true
         showExceptions true
         showStackTraces true
+        showStandardStreams = false
     }
 }
 

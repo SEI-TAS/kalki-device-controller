@@ -289,7 +289,7 @@ public class AlertConditionTesterTests extends BaseTest {
 
         List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
 
-        assertEquals(0, alertList.size());
+        assertEquals(1, alertList.size());
     }
 
     @Test
@@ -327,7 +327,7 @@ public class AlertConditionTesterTests extends BaseTest {
 
         List<Alert> alertList = AlertDAO.findAlertsByDevice(device.getId());
 
-        assertEquals(0, alertList.size());
+        assertEquals(1, alertList.size());
     }
 
     @Test
