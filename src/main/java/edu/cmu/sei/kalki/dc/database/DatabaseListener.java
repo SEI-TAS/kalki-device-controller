@@ -32,30 +32,42 @@
 package edu.cmu.sei.kalki.dc.database;
 
 import edu.cmu.sei.kalki.db.daos.DeviceDAO;
+import edu.cmu.sei.kalki.db.database.Postgres;
 import edu.cmu.sei.kalki.db.listeners.InsertListener;
 import edu.cmu.sei.kalki.db.models.Device;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class DatabaseListener {
+    private static final String LOG_ID = "[DatabaseListener] ";
     private Logger logger = Logger.getLogger("device-controller");
 
     public void start() {
-        InsertListener.startListening();
-        InsertListener.clearHandlers();
-        logger.info("[DatabaseListener] Starting");
-        InsertListener.addHandler("deviceinsert", new DeviceHandler(true));
-        InsertListener.addHandler("deviceupdate", new DeviceHandler(false));
-        InsertListener.addHandler("policyruleloginsert", new PolicyRuleLogHandler());
-        InsertListener.addHandler("devicestatusinsert",  new DeviceStatusHandler());
-        logger.info("[DatabaseListener] Initialized 4 database listeners.");
+        logger.info(LOG_ID + "Starting");
+
+        // Adding small delay in case someone is inserting devices at startup.
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) { }
 
         // get devices already inserted in system
+        logger.info(LOG_ID + "Sending info about existing devices");
         List<Device> deviceList = DeviceDAO.findAllDevices();
         DeviceHandler tempHandler = new DeviceHandler(true);
         for (Device d: deviceList){
+            logger.info(LOG_ID + "Found existing device.");
             tempHandler.handleNewInsertion(d.getId());
         }
+
+        logger.info( LOG_ID + "Initializing insert listeners");
+        InsertListener.clearHandlers();
+        InsertListener.startListening();
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_DEVICE, new DeviceHandler(true));
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_UPDATE_DEVICE, new DeviceHandler(false));
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_POLICY_INSTANCE, new PolicyRuleLogHandler());
+        InsertListener.addHandler(Postgres.TRIGGER_NOTIF_NEW_DEV_STATUS,  new DeviceStatusHandler());
+        logger.info(LOG_ID + "Initialized 4 database listeners.");
     }
 }
