@@ -31,7 +31,6 @@
  */
 package edu.cmu.sei.kalki.dc.rulebooks;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import edu.cmu.sei.kalki.db.daos.*;
 import edu.cmu.sei.kalki.db.models.*;
 
@@ -61,7 +60,7 @@ public class AlertConditionTester {
 
     public void testDeviceStatus(DeviceStatus status){
         Device device = DeviceDAO.findDevice(status.getDeviceId());
-        List<AlertContext> alertContexts = AlertContextDAO.findAlertContextsByDevice(status.getDeviceId());
+        List<AlertContext> alertContexts = AlertContextDAO.findAlertContextsForDeviceType(device.getType().getId());
 
         List<RuleBook> ruleBookRunnerList = rulebooks.get(device.getId());
         NameValueReferableMap factMap = prepareFactMap(device, status);
@@ -95,26 +94,24 @@ public class AlertConditionTester {
                             int numRules = rules.size();
 
                             if (resultValue == numRules) // All rules returned true
-                                insertAlert(context, status.getId());
+                                insertAlert(context, status);
                         }
                         else {
                             if (resultValue > 0) // At least one condition returned true
-                                insertAlert(context, status.getId());
+                                insertAlert(context, status);
                         }
-
                     }
                 }
             });
         }
 
         logger.info("[AlertConditionTester] Running rulebooks for DeviceStatus: "+status.getId());
-
     }
 
-    private void insertAlert(AlertContext context, int statusId) {
+    private void insertAlert(AlertContext context, DeviceStatus status) {
         AlertTypeLookup lookup = AlertTypeLookupDAO.findAlertTypeLookup(context.getAlertTypeLookupId());
 
-        Alert alert = new Alert(context.getDeviceId(), context.getAlertTypeName(), lookup.getAlertTypeId(), "Alert generated via status: "+statusId);
+        Alert alert = new Alert(status.getDeviceId(), context.getAlertTypeName(), lookup.getAlertTypeId(), "Alert generated via status: "+status.getId());
         alert.insert();
     }
 
@@ -140,15 +137,8 @@ public class AlertConditionTester {
 
                     // Get required number of statuses for the alert condition
                     int numStatuses = alertCondition.getNumStatues();
-                    List<DeviceStatus> statusList = new ArrayList<>();
-
                     DeviceStatus status = input.getStatus();
-                    int condDeviceId = alertCondition.getThresholdId();
-                    if (status.getDeviceId() != condDeviceId) { // condition referrs to another device
-                        statusList = DeviceStatusDAO.findNDeviceStatuses(condDeviceId, numStatuses);
-                    } else {
-                        statusList = DeviceStatusDAO.findNDeviceStatuses(status.getDeviceId(), numStatuses);
-                    }
+                    List<DeviceStatus> statusList = DeviceStatusDAO.findNDeviceStatuses(status.getDeviceId(), numStatuses);
 
                     if (statusList.size() < numStatuses) // not enough statuses for this condition
                         return false;
