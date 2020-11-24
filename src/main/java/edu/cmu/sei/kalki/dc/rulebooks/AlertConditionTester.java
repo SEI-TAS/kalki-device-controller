@@ -52,6 +52,7 @@ import com.deliveredtechnologies.rulebook.model.RuleStatus;
 
 public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
+    private static final String LOG_ID = "[AlertConditionTester]";
     private HashMap<Integer, List<RuleBook>> rulebooks;
 
     public AlertConditionTester(){
@@ -105,7 +106,7 @@ public class AlertConditionTester {
             });
         }
 
-        logger.info("[AlertConditionTester] Running rulebooks for DeviceStatus: "+status.getId());
+        logger.info(LOG_ID + " Running rulebooks for DeviceStatus: "+status.getId());
     }
 
     private void insertAlert(AlertContext context, DeviceStatus status) {
@@ -144,18 +145,19 @@ public class AlertConditionTester {
                         return false;
 
                     // Determine how to use status(es) value
+                    //logger.info(LOG_ID + " Enough statuses (" + statusList.size() + " >= " + numStatuses + ") to check rule.");
                     String attribute = alertCondition.getAttributeName();
                     String calculation = alertCondition.getCalculation();
 
                     String currentValue = "";
                     if (calculation.equals(AlertCondition.Calculation.AVERAGE.convert())) {
-                        System.out.println("AVERAGE");
+                        logger.info(LOG_ID + "Will calculate AVERAGE");
                         int sum = calcSum(statusList, attribute);
                         int avg = sum / numStatuses;
                         currentValue = String.valueOf(avg);
                     }
                     else if (calculation.equals(AlertCondition.Calculation.SUM.convert())) {
-                        System.out.println("SUM");
+                        logger.info(LOG_ID + "Will calculate SUM");
                         int sum = calcSum(statusList, attribute);
                         currentValue = String.valueOf(sum);
                     }
@@ -163,36 +165,44 @@ public class AlertConditionTester {
                         currentValue = statusList.get(0).getAttributes().get(attribute);
                     }
                     else {
+                        logger.warning(LOG_ID + " Unknown operation: " + calculation);
                         return false;
                     }
-
 
                     // Do comparison
                     String compOperator = alertCondition.getCompOperator();
                     String thresholdValue = alertCondition.getThresholdValue();
 
-                    if (compOperator.equals(AlertCondition.ComparisonOperator.EQUAL.convert())){
-                        return currentValue.equals(thresholdValue);
-                    } else {
-                        Double currVal = Double.valueOf(currentValue);
-                        Double thresVal = Double.valueOf(thresholdValue);
+                    double currVal = Double.parseDouble(currentValue);
+                    double thresVal = Double.parseDouble(thresholdValue);
 
-                        if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER.convert())) {
-                            return currVal > thresVal;
-                        }
-                        else if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER_OR_EQUAL.convert())) {
-                            return currVal >= thresVal;
-                        }
-                        else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS.convert())) {
-                            return currVal < thresVal;
-                        }
-                        else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS_OR_EQUAL.convert())) {
-                            return currVal <= thresVal;
-                        }
-                        else {
-                            return false;
-                        }
+                    boolean comparisonResult = false;
+                    if (compOperator.equals(AlertCondition.ComparisonOperator.EQUAL.convert())) {
+                        comparisonResult = currVal == thresVal;
+                        if(comparisonResult) logger.info(LOG_ID + "Condition is true! Comparing (" + currentValue + ") using (" + compOperator + ") to threshold " + thresholdValue + ".");
                     }
+                    else if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER.convert())) {
+                        comparisonResult = currVal > thresVal;
+                        if(comparisonResult) logger.info(LOG_ID + "Condition is true! Comparing (" + currentValue + ") using (" + compOperator + ") to threshold " + thresholdValue + ".");
+                    }
+                    else if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER_OR_EQUAL.convert())) {
+                        comparisonResult =  currVal >= thresVal;
+                        if(comparisonResult) logger.info(LOG_ID + "Condition is true! Comparing (" + currentValue + ") using (" + compOperator + ") to threshold " + thresholdValue + ".");
+                    }
+                    else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS.convert())) {
+                        comparisonResult = currVal < thresVal;
+                        if(comparisonResult) logger.info(LOG_ID + "Condition is true! Comparing (" + currentValue + ") using (" + compOperator + ") to threshold " + thresholdValue + ".");
+                    }
+                    else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS_OR_EQUAL.convert())) {
+                        comparisonResult = currVal <= thresVal;
+                        if(comparisonResult) logger.info(LOG_ID + "Condition is true! Comparing (" + currentValue + ") using (" + compOperator + ") to threshold " + thresholdValue + ".");
+                    }
+                    else {
+                        logger.warning(LOG_ID + " Unknown comparison: " + calculation);
+                        return false;
+                    }
+
+                    return comparisonResult;
 
                 })
                 .then((facts, result) -> {

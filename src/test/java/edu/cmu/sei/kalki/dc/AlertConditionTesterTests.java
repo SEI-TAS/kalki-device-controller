@@ -62,12 +62,12 @@ public class AlertConditionTesterTests extends BaseTest {
 
     @Test
     public void testTestDeviceStatusEqualsNoAlert() {
-        AlertCondition alertCondition = new AlertCondition(device.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.NONE,"1");
-        alertCondition.insert();
-
         AlertContext alertContext = new AlertContext(deviceType.getId(), AlertContext.LogicalOperator.OR, alertTypeLookup.getId(), alertType.getName());
-        alertContext.addCondition(alertCondition);
         alertContext.insert();
+
+        AlertCondition alertCondition = new AlertCondition(alertContext.getId(), deviceSensor.getId(), deviceSensor.getName(), 1, AlertCondition.ComparisonOperator.EQUAL, AlertCondition.Calculation.NONE,"1");
+        alertCondition.insert();
+        alertContext.addCondition(alertCondition);
 
         DeviceStatus deviceStatus = genDeviceStatus("0");
         sleep(500);
@@ -88,7 +88,7 @@ public class AlertConditionTesterTests extends BaseTest {
         alertCondition.insert();
         alertContext.addCondition(alertCondition);
         
-        DeviceStatus deviceStatus = genDeviceStatus("1");
+        DeviceStatus deviceStatus = genDeviceStatus("1.0");
         sleep(500);
 
         alertConditionTester.testDeviceStatus(deviceStatus);
