@@ -31,53 +31,185 @@
  */
 package edu.cmu.sei.kalki.dc.rulebooks;
 
-import edu.cmu.sei.kalki.db.daos.AlertConditionDAO;
-import edu.cmu.sei.kalki.db.daos.DeviceDAO;
-import edu.cmu.sei.kalki.db.database.Postgres;
-import edu.cmu.sei.kalki.db.models.AlertCondition;
-import edu.cmu.sei.kalki.db.models.Device;
-import edu.cmu.sei.kalki.db.models.DeviceStatus;
+import edu.cmu.sei.kalki.db.daos.*;
+import edu.cmu.sei.kalki.db.models.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 // Rulebook imports, for later reference
 import com.deliveredtechnologies.rulebook.FactMap;
 import com.deliveredtechnologies.rulebook.NameValueReferableMap;
-import com.deliveredtechnologies.rulebook.model.runner.RuleBookRunner;
+import com.deliveredtechnologies.rulebook.model.RuleBook;
+import com.deliveredtechnologies.rulebook.model.rulechain.cor.CoRRuleBook;
+import com.deliveredtechnologies.rulebook.lang.RuleBuilder;
+import com.deliveredtechnologies.rulebook.model.Rule;
+import com.deliveredtechnologies.rulebook.model.Auditor;
+import com.deliveredtechnologies.rulebook.model.RuleStatus;
 
 public class AlertConditionTester {
     private static Logger logger = Logger.getLogger("device-controller");
+    private HashMap<Integer, List<RuleBook>> rulebooks;
 
-    public AlertConditionTester(){}
+    public AlertConditionTester(){
+        this.rulebooks = new HashMap<>();
+    }
 
     public void testDeviceStatus(DeviceStatus status){
         Device device = DeviceDAO.findDevice(status.getDeviceId());
-        List<AlertCondition> alertConditionList = AlertConditionDAO.findAlertConditionsByDevice(status.getDeviceId());
-        NameValueReferableMap factMap = prepareFactMap(device, status, alertConditionList);
-        RuleBookRunner deviceSpecific = prepareRulebook(device.getType().getName());
-        RuleBookRunner allDevices = prepareRulebook("AllDevices");
+        List<AlertContext> alertContexts = AlertContextDAO.findAlertContextsForDeviceType(device.getType().getId());
+
+        List<RuleBook> ruleBookRunnerList = rulebooks.get(device.getId());
+        NameValueReferableMap factMap = prepareFactMap(device, status);
+
+        if (ruleBookRunnerList == null){ // Rulebooks don't exist so create
+            List<RuleBook> newRulebookRunnerList = new ArrayList<>();
+
+            for(AlertContext alertContext: alertContexts){
+                RuleBook newRulebook = createRulebook(alertContext);
+                newRulebookRunnerList.add(newRulebook);
+            }
+            rulebooks.put(device.getId(), newRulebookRunnerList);
+            ruleBookRunnerList = newRulebookRunnerList;
+        }
+
+        for(RuleBook rulebook: ruleBookRunnerList){
+            rulebook.run(factMap);
+            rulebook.getResult().ifPresent(result -> {
+                String[] resArray = result.toString().split(",");
+                int contextId = Integer.valueOf(resArray[0]);
+                int resultValue = Integer.valueOf(resArray[1]);
+
+                // Map a rulebook to related alert context
+                for (AlertContext context: alertContexts) {
+                    if (context.getId() == contextId) {
+                        String logicalOperator = context.getLogicalOperator();
+
+                        if (logicalOperator.equals(AlertContext.LogicalOperator.AND)) { // check that all rules returned true
+                            Auditor auditor = (Auditor)rulebook;
+                            Map<String, RuleStatus> rules = auditor.getRuleStatusMap();
+                            int numRules = rules.size();
+
+                            if (resultValue == numRules) // All rules returned true
+                                insertAlert(context, status);
+                        }
+                        else {
+                            if (resultValue > 0) // At least one condition returned true
+                                insertAlert(context, status);
+                        }
+                    }
+                }
+            });
+        }
 
         logger.info("[AlertConditionTester] Running rulebooks for DeviceStatus: "+status.getId());
-        deviceSpecific.run(factMap);
-        allDevices.run(factMap);
     }
 
+    private void insertAlert(AlertContext context, DeviceStatus status) {
+        AlertTypeLookup lookup = AlertTypeLookupDAO.findAlertTypeLookup(context.getAlertTypeLookupId());
 
-    private NameValueReferableMap prepareFactMap(Device device, DeviceStatus status, List<AlertCondition> alertConditionList) {
+        Alert alert = new Alert(status.getDeviceId(), context.getAlertTypeName(), lookup.getAlertTypeId(), "Alert generated via status: "+status.getId());
+        alert.insert();
+    }
+
+    private NameValueReferableMap prepareFactMap(Device device, DeviceStatus status) {
         NameValueReferableMap facts = new FactMap();
-        facts.setValue("device", device);
-        facts.setValue("status", status);
-        facts.setValue("alert-conditions", alertConditionList);
+        facts.setValue("input", new RulebookInput(device, status));
         return facts;
     }
 
-    private RuleBookRunner prepareRulebook(String deviceType) {
-        RuleBookRunner ruleBookRunner = null;
-        deviceType = deviceType.replaceAll("\\s","");
-        logger.info("[AlertConditionTester] "+deviceType+" rulebook selected");
-        ruleBookRunner = new RuleBookRunner("edu.cmu.sei.kalki.rulebooks."+deviceType);
+    private RuleBook createRulebook(AlertContext alertContext) {
+        RuleBook<Object> ruleBook = new CoRRuleBook<>();
+        for(AlertCondition alertCondition: alertContext.getConditions()) {
+            ruleBook.addRule(generateRule(alertCondition));
+        }
+        ruleBook.setDefaultResult(alertContext.getId()+",0");
+        return ruleBook;
+    }
 
-        return ruleBookRunner;
+    private Rule generateRule(AlertCondition alertCondition){
+        return RuleBuilder.create().withFactType(RulebookInput.class).withResultType(String.class)
+                .when(facts -> {
+                    RulebookInput input = facts.getOne();
+
+                    // Get required number of statuses for the alert condition
+                    int numStatuses = alertCondition.getNumStatues();
+                    DeviceStatus status = input.getStatus();
+                    List<DeviceStatus> statusList = DeviceStatusDAO.findNDeviceStatuses(status.getDeviceId(), numStatuses);
+
+                    if (statusList.size() < numStatuses) // not enough statuses for this condition
+                        return false;
+
+                    // Determine how to use status(es) value
+                    String attribute = alertCondition.getAttributeName();
+                    String calculation = alertCondition.getCalculation();
+
+                    String currentValue = "";
+                    if (calculation.equals(AlertCondition.Calculation.AVERAGE.convert())) {
+                        System.out.println("AVERAGE");
+                        int sum = calcSum(statusList, attribute);
+                        int avg = sum / numStatuses;
+                        currentValue = String.valueOf(avg);
+                    }
+                    else if (calculation.equals(AlertCondition.Calculation.SUM.convert())) {
+                        System.out.println("SUM");
+                        int sum = calcSum(statusList, attribute);
+                        currentValue = String.valueOf(sum);
+                    }
+                    else if (calculation.equals(AlertCondition.Calculation.NONE.convert())) {
+                        currentValue = statusList.get(0).getAttributes().get(attribute);
+                    }
+                    else {
+                        return false;
+                    }
+
+
+                    // Do comparison
+                    String compOperator = alertCondition.getCompOperator();
+                    String thresholdValue = alertCondition.getThresholdValue();
+
+                    if (compOperator.equals(AlertCondition.ComparisonOperator.EQUAL.convert())){
+                        return currentValue.equals(thresholdValue);
+                    } else {
+                        Double currVal = Double.valueOf(currentValue);
+                        Double thresVal = Double.valueOf(thresholdValue);
+
+                        if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER.convert())) {
+                            return currVal > thresVal;
+                        }
+                        else if (compOperator.equals(AlertCondition.ComparisonOperator.GREATER_OR_EQUAL.convert())) {
+                            return currVal >= thresVal;
+                        }
+                        else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS.convert())) {
+                            return currVal < thresVal;
+                        }
+                        else if (compOperator.equals(AlertCondition.ComparisonOperator.LESS_OR_EQUAL.convert())) {
+                            return currVal <= thresVal;
+                        }
+                        else {
+                            return false;
+                        }
+                    }
+
+                })
+                .then((facts, result) -> {
+                    // result is of format: contextId, result
+                    String[] res = result.getValue().split(",");
+                    String contextId = res[0];
+                    int curResult = Integer.valueOf(res[1]) + 1;
+                    result.setValue(contextId+","+curResult);
+                })
+                .build();
+    }
+
+    private int calcSum(List<DeviceStatus> statusList, String attribute) {
+        int sum = 0;
+        for(DeviceStatus tempStatus: statusList) {
+            sum += Integer.valueOf(tempStatus.getAttributes().get(attribute));
+        }
+        return sum;
     }
 }

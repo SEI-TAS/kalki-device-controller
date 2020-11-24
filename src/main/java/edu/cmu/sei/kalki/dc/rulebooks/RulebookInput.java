@@ -29,54 +29,35 @@
  * DM20-0543
  *
  */
-package edu.cmu.sei.kalki.dc.rulebooks.UdooNeo;
+package edu.cmu.sei.kalki.dc.rulebooks;
 
+import edu.cmu.sei.kalki.db.models.Device;
+import edu.cmu.sei.kalki.db.models.DeviceStatus;
 
-import com.deliveredtechnologies.rulebook.annotation.*;
-import edu.cmu.sei.kalki.dc.rulebooks.RulebookRule;
+public class RulebookInput {
+    private Device device;
+    private DeviceStatus status;
 
-@Rule()
-public class Gyro extends RulebookRule {
-    private final double gyroXLowerBound = -45;
-    private final double gyroXUpperBound = 45;
-    private final double gyroYLowerBound = -60;
-    private final double gyroYUpperBound = 60;
-    private final double gyroZLowerBound = -15;
-    private final double gyroZUpperBound = 15;
-    private final double gyroModLimit = 76.5;
+    public RulebookInput() {}
 
-    public Gyro(){ }
-
-    /**
-     * UNTS DeviceStatus.attributes
-     * {
-     *     accelerometerX: "",
-     *     accelerometerY: "",
-     *     accelerometerZ: "",
-     *     gyroscopeX: "",
-     *     gyroscopeY: "",
-     *     gyroscopeZ: "",
-     *     magnetometerX: "",
-     *     magnetometerY: "",
-     *     magnetometerZ: "",
-     *     tempmax: "",
-     *     tempmax_hyst: "",
-     *     tempinput: ""
-     * }
-     *
-     *
-     * @return
-     */
-    public boolean conditionIsTrue(){
-        setAlertCondition("unts-gyro");
-
-        String stateCondition = alertCondition.getVariables().get("state");
-        if(!device.getCurrentState().getName().equals(stateCondition))
-            return false;
-
-        ThreeAxisResult result = ThreeAxisUtil.checkRawValues(status, alertCondition, "gyroscope");
-        alertInfo = result.getAlertInfo();
-        return result.isConditionIsTrue();
+    public RulebookInput(Device device, DeviceStatus deviceStatus) {
+        this.device = device;
+        this.status = deviceStatus;
     }
 
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
+    }
+
+    public DeviceStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeviceStatus status) {
+        this.status = status;
+    }
 }
